@@ -1,0 +1,134 @@
+
+<!--Load in all data from Django to javascript-->
+<script type='text/javascript'>
+
+    var datasetID = "{{ dataset_id }}";
+
+    var experimentInfo = {{ existingExperimentInfoJSON|safe }};
+    var partners = {{ existingPartnersJSON|safe }};
+    var reqs = {{ existingReqsJSON|safe }};
+    var expSteps = {{ existingExpStepsJSON|safe }};
+    var reportings = {{ existingReportingsJSON|safe }};
+
+</script>
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <body>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+
+            <!--CSS/Bootstrap-->
+
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+            {% load staticfiles %}
+            <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+            <link rel="stylesheet" type="text/css" href="{% static 'css/viewprotocol.css' %}" />
+
+            <!--Javascript-->
+            <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+            <script src="{% static 'javascript/bootbox.min.js' %}"></script>
+            <script src="{% static 'javascript/functions.js' %}"></script>
+        </head>
+
+
+        <div class="container">
+
+            <div class="switchon-header">
+                <span><img src="{% static 'img/sologo_new_cropped.png' %}" alt=""/></span>
+                <h1>Protocol: {{ basic.shortname }}</h1>
+            </div>
+
+
+            <hr>
+            <h4> Experiment information </h4>
+
+            <table id="experimentTable" table-border="0">
+                <tbody>
+                </tbody>
+            </table>
+
+            <script>
+                writeLabelLine("#experimentTable > tbody", "Full experiment name:", experimentInfo.title);
+                writeLabelLine("#experimentTable > tbody", "Experiment Idea:", experimentInfo.experimentIdea );
+                writeLabelLine("#experimentTable > tbody", "Hypothesis:", experimentInfo.hypothesis );
+                writeLabelLine("#experimentTable > tbody", "Research objective:", experimentInfo.researchObjective);
+                writeLabelLine("#experimentTable > tbody", "Date last update:", experimentInfo.dateLastUpdate);
+            </script>
+
+
+            <hr>
+            <h4> Partners </h4>
+
+            <div class="row">
+                <div class="col-md-10">
+                    <table id="partnerTable" table-border="0">
+                        <th class="col-md-3 infotext"><strong>Name</strong></th>
+                        <th class="col-md-3 infotext"><strong>E-mail</strong></th>
+                        <th class="col-md-3 infotext"><strong>Organisation</strong></th>
+                        <th class="col-md-1 infotext"><strong></strong></th>
+                        <tbody>
+                         {% for partner in partners %}
+                            <tr><td class="col-md-3 infotext">{{ partner.name }}</td>
+                            <td class="col-md-3 infotext">{{ partner.email }}</td>
+                            <td class="col-md-3 infotext">{{ partner.organisation}}</td>
+                            <td class="col-md-1 infotext"><strong>{% if partner.lead %}lead{% endif %}</strong></td></tr>
+                         {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <hr>
+            <h4> A) Data & Method Preparation </h4>
+            <table id="methodTable" table-border="0">
+                <tbody>
+                </tbody>
+            </table>
+
+            <script>
+                writeStepsViewProtocol(reqs, "methodTable");
+            </script>
+
+
+            <hr>
+            <h4> B) Experiment Analysis Steps </h4>
+
+            <table id="stepTable" table-border="0">
+                <tbody>
+                </tbody>
+            </table>
+
+            <script>
+                writeStepsViewProtocol(expSteps, "stepTable");
+            </script>
+
+
+            <hr>
+            <h4> C) Result Reporting </h4>
+            <table id="resultTable" table-border="0">
+                <tbody>
+                </tbody>
+            </table>
+
+            <script>
+                writeStepsViewProtocol(reportings, "resultTable");
+            </script>
+
+
+        </div> <!--END CONTAINER -->
+
+        <br>
+
+        <footer class="switchonfooter">
+            <img class="switchonfooterimage" src="{% static 'img/switchonfooter_adjusted.png' %}" alt=""/>
+        </footer>
+
+    </body>
+</html>

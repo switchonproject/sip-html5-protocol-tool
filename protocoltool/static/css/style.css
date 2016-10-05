@@ -1,0 +1,118 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin: 0 0 100px; /* bottom = footer height */
+}
+
+.highlight {
+    background-color: rgb(250,250,180);
+}
+
+/* supersede bootstrap at the row level by being annoyingly specific
+*/
+.table-striped > tbody > tr:nth-child(odd).highlight > td {
+    background-color: rgb(250,250,180);
+}
+
+/* supersede bootstrap at the cell level by being annoyingly specific */
+.table-striped > tbody > tr:nth-child(odd) > td.highlight {
+	background-color:rgb(250,250,180);
+}
+
+
+.col-md-1.btnupdown {
+    padding: 0px;
+    text-align: right;
+}
+
+tr:hover td {
+    background:rgb(250,250,180);
+}
+
+.row {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.table-hover {
+    display:block;
+    max-height:560px;
+    overflow-y:auto;
+}
+
+a, a:link, a:visited, a:hover, a:active {
+	color:inherit;
+	text-decoration: none;
+ }
+
+thead, tbody tr {
+    display:table;
+    width:100%;
+    table-layout:fixed;
+}
+
+.switchon-header {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 35px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.switchon-header h1 {
+     display:inline;
+         margin-left: 15px;
+}
+
+thead {
+    background-color: rgb(38,90,136);
+    color: white;
+}
+
+.error {
+    background-color : Bisque;
+    border: 2px solid Crimson;
+}
+
+.switchonfooter {
+    position:absolute;
+    bottom:0;
+    left:0;
+    height: 100px;
+    width: 100%;
+    box-shadow: 0 -4px 0 rgb(0,200,0);
+    background: black;
+}
+
+.switchonfooterimage {
+    display: block;
+    margin: auto;
+}
+
+.alert .glyphicon {
+    display:table-cell;
+    vertical-align: middle;
+    padding-right: 15px;
+}
+
+.alert div {
+	height: 50px;
+    display:table-cell;
+    vertical-align: middle;
+}
+
+.infotext {
+    vertical-align: top;
+    height: 20px;
+    padding: 3px;
+    border-top: 0px;
+    white-space: pre-wrap;
+}
+
+p {
+    margin-bottom: 0px;
+}

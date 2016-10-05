@@ -1,0 +1,25 @@
+p {
+    margin-bottom: 0px;
+}
+
+.switchon-header {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 35px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.switchon-header h1 {
+     display:inline;
+         margin-left: 15px;
+}
+
+.trdark {
+   background-color:rgb(247,247,251);
+}
+
+tr:hover td {
+    background:rgb(250,250,180);
+}

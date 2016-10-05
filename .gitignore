@@ -1,0 +1,10 @@
+#startup bat file
+start.bat
+
+# database
+db_protocoltool
+
+# pycharm
+.idea
+*.pyc
+

@@ -1,0 +1,321 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!--CSS/Bootstrap/FontAwesome-->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+        {% load staticfiles %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+
+        <!--Javascript-->
+        <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+        <script src="{% static 'javascript/bootbox.min.js' %}"></script>
+        <script src="{% static 'javascript/functions.js' %}"></script>
+
+    </head>
+
+    <body>
+
+
+        <div class="container">
+
+            <div class="switchon-header">
+                <span><img src="{% static 'img/sologo_new_cropped.png' %}" alt=""/></span>
+                <h1>Protocol Tool</h1>
+            </div>
+
+            <div id="messagetype">
+                <span id="messagefa"></span>
+                <div id="messagetext"></div>
+            </div>
+
+
+            {% if show_review %}
+            <script>
+                var message = "Review completed protocols for experiments which can be repeated."
+                setMessage("alert alert-success", "fa fa-4x fa-fw fa-pull-left fa-info-circle", message);
+            </script>
+            {% endif %}
+            {% if show_participate %}
+                {% if user.is_authenticated %}
+                <script>
+                    var message = "Hello " + "{{user.username}}! " + "View or edit existing experiment protocols, " +
+                                   "or when the protocol is complete, " +
+                                  "send it to review or repeat where others can view it and repeat it."
+                    setMessage("alert alert-success", "fa fa-4x fa-fw fa-pull-left fa-info-circle", message);
+                </script>
+                {% else %}
+                <script>
+                    var message = "To join an on-going experiment, please log in first to sign up, " +
+                     "edit and participate according to the protocol. If you do not have a user-account, " +
+                     "contact the appointed experiment Leader. You can find the e-mail address of the Leader " +
+                     "by clicking the View button of the protocol of interest."
+                    setMessage("alert alert-success", "fa fa-4x fa-fw fa-pull-left fa-info-circle", message);
+                </script>
+                {% endif %}
+
+            {% endif %}
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    {% if show_review %}
+                    Review or Repeat experiments
+                    {% endif %}
+                    {% if show_participate %}
+                        {% if user.is_authenticated %}
+                            Participate in defining a protocol
+                        {% else %}
+                            View protocols in progress (login to participate)
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+
+                <div class="panel-body">
+
+                    {% if show_participate %}
+
+                        <form class="form-inline pull-left" action="http://dl-ng005.xtr.deltares.nl/admin/">
+                            <button type="submit" title="Manage user accounts if you have administrator rights" class="btn btn-default btn-sm">
+                                <i class="fa fa-user"></i>&nbsp&nbspAdmin
+                            </button>
+                        </form>
+
+                        {% if user.is_authenticated %}
+                        <form class="form-inline pull-right" role="form" method="post" action="/project/logout/">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-warning btn-sm">
+                                <i class="fa fa-sign-out"></i>&nbsp&nbspLog Out
+                            </button>
+
+                        </form>
+                        {% else %}
+                        <form class="form-inline pull-right" role="form" autocomplete="off" method="post" action="/project/login/">
+                            {% csrf_token %}
+                            <div class="form-group form-group-sm">
+                                <input type="text" class="form-control" placeholder="username" value="" name="username" size="15">
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <input type="password" class="form-control" value="" placeholder="password" name="password" size="15">
+                            </div>
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <i class="fa fa-sign-in"></i>&nbsp&nbspLog In
+                            </button>
+                        </form>
+                        {% endif %}
+
+                    {% endif %}
+
+
+                    <div class="row"> <!--Buttons-->
+                        <div class="col-md-12">
+                            <div class="pull-right">
+                                <!--<button type="button" id="addDataset" onclick="window.location.assign('/project/form/')" class="btn btn-xs btn-primary">Add protocol</button>-->
+                                <!--<button type="button" id="addDataset" onclick="createprotocol" class="btn btn-xs btn-primary">Add protocol</button>-->
+                            </div>
+                        </div>
+                    </div> <!--END Buttons-->
+
+
+                    <div class="row"> <!--Datasets table-->
+
+                        <div class="col-md-12">
+
+                        {% if show_participate %}
+
+                            <table id="participatetable" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-5">Protocol</th>
+                                        <th class="col-md-2">Last update</th>
+                                        <th class="col-md-2">Status</th>
+                                        <th class="col-md-3">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for dataset in dataset_list  %}
+                                        {% if dataset.checked %}
+                                            {% if not dataset.published  %}
+                                            <tr>
+                                                <td class="col-md-5">{{ dataset.shortname }}</td>
+                                                <td class="col-md-2">{{ dataset.dateLastUpdate | date:'d-m-Y' }}</td>
+                                                <td class="col-md-2">Participate</td>
+                                                <td class="col-md-3">
+                                                    <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="view" onclick="viewProtocol(this)">View</button>
+
+                                                    {% if user.is_authenticated %}
+                                                    <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="edit" onclick="editProtocol(this)">Edit</button>
+                                                    <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="publish" onclick="publishProtocol(this)">Send to 'review or repeat'</button>
+                                                    {% else %}
+                                                    <button type="button" class="btn btn-xs btn-default disabled" title="Please login to edit protocols" name="edit">Edit</button>
+                                                    <button type="button" class="btn btn-xs btn-default disabled" title="Please login to send a protocol to review or repeat" name="publish">Send to 'review or repeat'</button>
+
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% empty %}
+                                    <tr>
+                                        <td>No protocols defined</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                        {% endif %}
+
+                        {% if show_review %}
+
+                            <table id="reviewtable" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-5">Protocol</th>
+                                        <th class="col-md-2">Date completed</th>
+                                        <th class="col-md-2">Status</th>
+                                        <th class="col-md-3">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for dataset in dataset_list  %}
+                                        {% if dataset.checked %}
+                                            {% if dataset.published %}
+                                            <tr>
+                                                <td class="col-md-5">{{ dataset.shortname }}</td>
+                                                <td class="col-md-2">{{ dataset.dateLastUpdate | date:'d-m-Y' }}</td>
+                                                <td class="col-md-2">
+                                                    Review or repeat
+                                                </td>
+                                                <td class="col-md-3">
+                                                    <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="view" onclick="viewProtocol(this)">View protocol</button>
+                                                    <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="viewprotocol" onclick="exportProtocol(this)">Download PDF</button>
+                                                </td>
+                                            </tr>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% empty %}
+                                    <tr>
+                                        <td>No protocols defined</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    {% endfor %}
+
+                                    <!--List the other protocols, created externally!-->
+                                    {% for external_protocol in external_protocol_list  %}
+
+                                    <tr>
+                                        <td class="col-md-5">{{ external_protocol.shortname }}</td>
+                                        <td class="col-md-2">{{ external_protocol.dateLastUpdate | date:'d-m-Y' }}</td>
+                                        <td class="col-md-2">
+                                            Review or repeat
+                                        </td>
+                                        <td class="col-md-3">
+                                            <button type="button" class="btn btn-xs btn-default"
+                                                    name="viewprotocol"
+                                                    onclick="window.open('{{ external_protocol.url }}', '_blank');">View protocol</button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+
+
+                                </tbody>
+                            </table>
+
+                        {% endif %}
+                        </div>
+
+                    </div> <!--END Datasets table-->
+                </div> <!--END Panel body-->
+
+
+                <div class="panel-footer clearfix">
+
+                    <form class="form-inline pull-left" action="mailto:switchon.wm@gmail.com">
+                        <button type="submit" title="Send feedback on the tool" class="btn btn-primary pull-left">
+                                <i class="glyphicon glyphicon-envelope"></i>&nbsp&nbspFeedback
+                        </button>
+                    </form>
+
+                    {% if show_review %}
+                    <form action="../participate/" method="POST" class="form-inline">
+                        {% csrf_token %}
+                        <button type="submit" name="changeList" class="btn btn-primary pull-right">
+                            Show participate protocols
+                        </button>
+                    </form>
+                    {% endif %}
+
+                    {% if show_participate %}
+                    <form action="../review/" method="POST" class="form-inline">
+                        {% csrf_token %}
+                        <button type="submit" name="changeList" class="btn btn-primary pull-right">
+                            Show review protocols
+                        </button>
+                    </form>
+                    {% endif %}
+
+                </div>
+            </div> <!-- End Panel-->
+        </div> <!--END Container-->
+
+        <form id="dataset_action_form" action="../overviewaction/" method="post">
+            {% csrf_token %}
+
+            <input type="hidden" name="show_review" value="{{ show_review }}">
+            <input type="hidden" name="show_participate" value="{{ show_participate }}">
+            <input type="hidden" name="dataset_id" id="datasetID" value="">
+            <input type="hidden" name="dataset_action" id="datasetActionID" value="">
+        </form>
+
+        <br>
+
+        <footer class="switchonfooter">
+            <img class="switchonfooterimage" src="{% static 'img/switchonfooter_adjusted.png' %}" alt=""/>
+        </footer>
+
+    </body>
+
+
+</html>
+
+<script>
+
+    function exportProtocol(instance){
+        $('#datasetActionID').val("export");
+        $('#datasetID').val(instance.value);
+        $('#dataset_action_form').submit();
+    }
+
+    function viewProtocol(instance){
+        $('#datasetActionID').val("view");
+        $('#datasetID').val(instance.value);
+        $('#dataset_action_form').submit();
+    }
+
+    function editProtocol(instance){
+        $('#datasetActionID').val("edit");
+        $('#datasetID').val(instance.value);
+        $('#dataset_action_form').submit();
+    }
+
+    function publishProtocol(instance){
+
+        bootbox.confirm('The protocol will be made non-editable. Are you sure you wish to continue?', function(result){
+            if(result){
+                $('#datasetActionID').val("publish");
+                $('#datasetID').val(instance.value);
+                $('#dataset_action_form').submit();
+            }
+        });
+    }
+
+</script>
