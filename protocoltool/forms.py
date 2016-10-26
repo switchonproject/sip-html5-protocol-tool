@@ -1,7 +1,18 @@
 from django import forms
 from .models import BasicDataset, Partner, DataReq, ExpStep, Reporting, UserProfile
-from django.forms.widgets import DateInput, Textarea, TextInput, EmailInput
+from django.forms.widgets import DateInput, Textarea, TextInput, EmailInput, PasswordInput
 from django.contrib.auth.models import User
+
+
+# our new form
+class ContactForm(forms.Form):
+    leadName = forms.CharField(required=True)
+    leadEmail = forms.EmailField(required=True)
+    content = forms.CharField(
+        required=True,
+        widget=forms.Textarea
+    )
+
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
@@ -9,12 +20,35 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
+        labels = {
+            'username': 'User name',
+            'email': 'Email',
+            'password': 'Password',
+        }
+        widgets = {
+            'username': TextInput(
+                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus'}
+            ),
+            'email': EmailInput(
+                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus'}
+            ),
+            'password': PasswordInput(
+                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus'}
+            )
+        }
 
 
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['website']
+        fields = ['organisation']
+        labels = {'organisation' : 'Organisation'}
+        widgets = {
+            'organisation': TextInput(
+                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus'}
+            )
+        }
+
 
 
 class BasicDatasetForm(forms.ModelForm):

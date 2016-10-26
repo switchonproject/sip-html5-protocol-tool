@@ -128,6 +128,44 @@ function checkValidField(item){
     }
 }
 
+function checkValidEmail(item){
+    /*
+    check if a field in the form has any contents (is filled in)
+    */
+   if(item.val() === null || item.val() === "" ){
+        item.addClass('error');
+        return false;
+    }
+    else {
+        item.removeClass('error');
+        return true;
+    }
+}
+
+
+function validateEmail(item)
+{
+    var inputText = item.val();
+    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+    if(inputText.match(mailformat))
+    {
+        item.removeClass('error');
+        return true;
+    }
+    else
+    {
+        item.addClass('error');
+        return false;
+    }
+}
+
+
+function register()
+{
+    alert("Register!!")
+}
+
 
 function checkValidDate(item) {
     // input is always (standard for date field HTML5) YYYY-mm-dd
@@ -163,14 +201,15 @@ function finish() {
     validTitle = checkValidField($('#id_basic_title'));
 
     if (validShortname && validTitle){
-        bootbox.confirm('Experiment information that is not saved will be lost. Are you sure you wish to close the form?', function(result){
-            if(result){
-                $('#dataset_form').submit();
-            }
-        });
+//        bootbox.confirm('Experiment information that is not saved will be lost. Are you sure you wish to close the form?', function(result){
+//            if(result){
+//                $('#dataset_form').submit();
+//            }
+//        });
+        $('#dataset_form').submit();
     }
     else{
-        bootbox.confirm('No valid full experiment name or short name, the new protocol will not be stored. Are you sure you wish to go back to the participate tool?', function(result){
+        bootbox.confirm('No valid full experiment name or short name. Are you sure you wish to go back to the participate tool?', function(result){
             if(result){
                 $('#dataset_form').submit();
             }
@@ -251,7 +290,6 @@ function refreshPartners(){
         $("#partnerTable > tbody").append('<tr class="partnerRow"><td class="col-md-5 partnername">' + existingPartners[i].name +
         '<td class="col-md-5">' + existingPartners[i].organisation + '</td><td class="col-md-2">' + leadText + '</td></tr>');
     }
-
 
 
     // also refresh the partners in the reqs table

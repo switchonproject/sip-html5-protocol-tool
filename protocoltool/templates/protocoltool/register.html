@@ -2,31 +2,77 @@
 <html>
     <head>
         <title>Protocol Tool</title>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+
+            <!--CSS/Bootstrap-->
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+		    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+            {% load staticfiles %}
+            <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+
+            <!--Javascript-->
+            <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
     </head>
 
     <body>
-        <h1>Register</h1>
 
-        {% if registered %}
-        <strong>Thank you for registering!</strong>
-        <a href="/project/">Return to the homepage.</a><br />
-        {% else %}
-        <strong>Register here!</strong><br />
+        <div class="container">
 
-        <form id="user_form" method="post" action="/project/register/"
-                enctype="multipart/form-data">
+            <h1>Register</h1>
 
-            {% csrf_token %}
+            {% if registered %}
+            <strong>Thank you for registering!</strong>
+            <a href="/project/">Return to the homepage.</a><br />
+            {% else %}
 
-            <!-- Display each form. The as_p method wraps each element in a paragraph
-                 (<p>) element. This ensures each element appears on a new line,
-                 making everything look neater. -->
-            {{ user_form.as_p }}
-            {{ profile_form.as_p }}
+            <form id="user_form" role="form" method="post" action="/project/register/" enctype="multipart/form-data" class="form-horizontal">
+                <div class="row">
+                    <div class="col-md-6">
+                        {% csrf_token %}
 
-            <!-- Provide a button to click to submit the form. -->
-            <input type="submit" name="submit" value="Register" />
-        </form>
-        {% endif %}
+                        {% for field in user_form %}
+
+                            <div id="{{ field.label }}" class="form-group">
+                                <label for="{{ field.id_for_label }}" class="col-md-3 control-label">{{ field.label }}:</label>
+                                <div id="{{ field.label }}_field" class="col-md-9">
+                                    {{ field }}
+                                    {{ field.errors }}
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                        {% for field in profile_form %}
+
+                            <div id="{{ field.label }}" class="form-group">
+                                <label for="{{ field.id_for_label }}" class="col-md-3 control-label">{{ field.label }}:</label>
+                                <div id="{{ field.label }}_field" class="col-md-9">
+                                    {{ field }}
+                                    {{ field.errors }}
+                                </div>
+                            </div>
+
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="submit" name="submit" class="btn btn-primary pull-right">
+                            <!--<i class="fa fa-user-plus"></i>&nbsp&nbspRegister-->
+                            Register
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+
+            {% endif %}
+        </div>
     </body>
 </html>

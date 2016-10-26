@@ -4,17 +4,19 @@ import datetime
 
 from django.contrib.auth.models import User
 
+
+
 class UserProfile(models.Model):
     # This line is required. Links UserProfile to a User model instance.
     user = models.OneToOneField(User)
 
     # The additional attributes we wish to include.
-    website = models.URLField(blank=True)
+    # website = models.URLField(blank=True)
+    organisation = models.CharField(max_length=100)
 
     # Override the __unicode__() method to return out something meaningful!
     def __unicode__(self):
         return self.user.username
-
 
 
 class BasicDataset(models.Model):
@@ -30,6 +32,9 @@ class BasicDataset(models.Model):
     dateLastUpdate = models.DateField(blank=True, default=datetime.date.today)
     checked = models.BooleanField(default=False)
     published = models.BooleanField(default=False)
+
+    leadUser = models.ForeignKey(UserProfile, related_name="lead_user", null=True)
+    editUsers = models.ManyToManyField(UserProfile, related_name="edit_users", null=True)
 
 
 class Partner(models.Model):

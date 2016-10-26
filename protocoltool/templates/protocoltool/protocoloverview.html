@@ -18,6 +18,7 @@
         <script src="{% static 'javascript/bootbox.min.js' %}"></script>
         <script src="{% static 'javascript/functions.js' %}"></script>
 
+
     </head>
 
     <body>
@@ -35,6 +36,8 @@
                 <div id="messagetext"></div>
             </div>
 
+
+            <h2>User info: {{ user }}</h2>
 
             {% if show_review %}
             <script>
@@ -96,6 +99,18 @@
 
                         </form>
                         {% else %}
+
+                        <!--<form class="form-inline " role="form" autocomplete="off" method="post" action="/project/register/">-->
+                            <!--{% csrf_token %}-->
+                            <!--<button type="submit" id="registerbuttonid" class="btn btn-primary btn-sm">-->
+                                <!--<i class="fa fa-user-plus"></i>&nbsp&nbspRegister-->
+                            <!--</button>-->
+
+                        <button type="button" class="btn btn-primary btn-sm pull-right" id="registerbuttonid"
+                                onclick="window.location.assign('/project/register/')">
+                                <i class="fa fa-user-plus"></i>&nbsp&nbspRegister
+                        </button>
+
                         <form class="form-inline pull-right" role="form" autocomplete="off" method="post" action="/project/login/">
                             {% csrf_token %}
                             <div class="form-group form-group-sm">
@@ -108,6 +123,7 @@
                                 <i class="fa fa-sign-in"></i>&nbsp&nbspLog In
                             </button>
                         </form>
+
                         {% endif %}
 
                     {% endif %}
@@ -150,12 +166,20 @@
                                                     <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="view" onclick="viewProtocol(this)">View</button>
 
                                                     {% if user.is_authenticated %}
-                                                    <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="edit" onclick="editProtocol(this)">Edit</button>
-                                                    <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="publish" onclick="publishProtocol(this)">Send to 'review or repeat'</button>
-                                                    {% else %}
-                                                    <button type="button" class="btn btn-xs btn-default disabled" title="Please login to edit protocols" name="edit">Edit</button>
-                                                    <button type="button" class="btn btn-xs btn-default disabled" title="Please login to send a protocol to review or repeat" name="publish">Send to 'review or repeat'</button>
 
+                                                        <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="edit" onclick="editProtocol(this)">Edit</button>
+                                                        <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="publish" onclick="publishProtocol(this)">Send to 'review or repeat'</button>
+
+                                                        <!--{% if user.id in dataset.editUserIds %}-->
+                                                            <!--<button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="edit" onclick="editProtocol(this)">Edit</button>-->
+                                                        <!--{% else %}-->
+                                                            <!--<button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="requestEdit" onclick="requestEdit(this)">Request edit rights</button>-->
+                                                        <!--{% endif %}-->
+
+                                                        <!--{% if user.id == dataset.leadUser.id %}-->
+                                                            <!--<button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="publish" onclick="publishProtocol(this)">Send to 'review or repeat'</button>-->
+                                                        <!--{% endif %}-->
+                                                        <!--<button type="button" class="btn btn-xs btn-default disabled" title="Please login to send a protocol to review or repeat" name="publish">Send to 'review or repeat'</button>-->
                                                     {% endif %}
                                                 </td>
                                             </tr>
@@ -187,6 +211,7 @@
                                 <tbody>
                                     {% for dataset in dataset_list  %}
                                         {% if dataset.checked %}
+
                                             {% if dataset.published %}
                                             <tr>
                                                 <td class="col-md-5">{{ dataset.shortname }}</td>
@@ -303,6 +328,12 @@
 
     function editProtocol(instance){
         $('#datasetActionID').val("edit");
+        $('#datasetID').val(instance.value);
+        $('#dataset_action_form').submit();
+    }
+
+    function requestEdit(instance){
+        $('#datasetActionID').val("requestEdit");
         $('#datasetID').val(instance.value);
         $('#dataset_action_form').submit();
     }

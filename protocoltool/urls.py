@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url(r'^$', views.review, name='protocoloverview_review'),
     url(r'^participate/$', views.participate, name='protocoloverview_participate'),
     url(r'^review/$', views.review, name='protocoloverview_review'),
+    url(r'^contact/$', views.contact, name='contact'),
 
     url(r'^overviewaction/$', views.protocolOverviewAction, name='protocoloverview_action'),
 

@@ -48,6 +48,10 @@ a, a:link, a:visited, a:hover, a:active {
 	text-decoration: none;
  }
 
+#registerbuttonid{
+ margin:0 4px;
+}
+
 thead, tbody tr {
     display:table;
     width:100%;

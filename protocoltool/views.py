@@ -1,9 +1,10 @@
 from django.core.urlresolvers import reverse
-from django.http import Http404, HttpResponseRedirect
+from django.core.mail import send_mail
+from django.http import Http404
 from django.shortcuts import render
-from .forms import BasicDatasetForm, PartnerForm, DataReqForm, ExpStepForm, ReportingForm, UserForm, UserProfileForm
+from .forms import BasicDatasetForm, PartnerForm, DataReqForm, ExpStepForm, ReportingForm, UserForm, UserProfileForm, ContactForm
 from .models import BasicDataset, Partner, DataReq, ExpStep, Reporting, ExternalProtocol
-from django.forms.models import model_to_dict
+from django import forms
 from django.contrib.auth import authenticate, login, logout
 import json
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
@@ -13,15 +14,49 @@ import functions, PDFexport
 
 import pdb
 
-# Django exceptions
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist   # Django exceptions
+
+
+def contact(request):
+
+    contact_form = ContactForm
+
+    if request.method == 'POST':
+        form = contact_form(data=request.POST)
+
+        if form.is_valid():
+            leadName = request.POST.get('leadName', '')
+            leadEmail = request.POST.get('leadEmail', '')
+            formContent = request.POST.get('content', '')
+
+            # # Email the profile with the contact information
+            # context = {
+            #     'contact_name': contact_name,
+            #     'contact_email': contact_email,
+            #     'form_content': form_content,
+            # })
+            # content = template.render(context)
+            #
+            # email = EmailMessage(
+            #     "New contact form submission",
+            #     content,
+            #     "Your website" +'',
+            #     ['youremail@gmail.com'],
+            #     headers = {'Reply-To': contact_email }
+            # )
+            # email.send()
+
+            send_mail("Test from Django", formContent, "switchon.vwsl@gmail.com", [leadEmail])
+
+            return HttpResponseRedirect('/project/participate/')
+
+    return render(request, 'contact.html', {'form': contact_form,})
 
 
 def register(request):
 
     registered = False
 
-    # If it's a HTTP POST, we're interested in processing form data.
     if request.method == 'POST':
         # Attempt to grab information from the raw form information.
         # Note that we make use of both UserForm and UserProfileForm.
@@ -49,12 +84,15 @@ def register(request):
 
             # Update our variable to tell the template registration was successful.
             registered = True
+            return HttpResponseRedirect('/project/participate/')
 
         # Invalid form or forms - mistakes or something else?
         # Print problems to the terminal.
         # They'll also be shown to the user.
         else:
             print user_form.errors, profile_form.errors
+            return HttpResponse("Invalid registration: " + str(user_form.errors) + ", "  + str(profile_form.errors))
+
 
     # Not a HTTP POST, so we render our form using two ModelForm instances.
     # These forms will be blank, ready for user input.
@@ -62,10 +100,9 @@ def register(request):
         user_form = UserForm()
         profile_form = UserProfileForm()
 
-    # Render the template depending on the context.
-    return render(request,
-            'protocoltool/register.html',
-            {'user_form': user_form, 'profile_form': profile_form, 'registered': registered} )
+        return render(request,
+                'protocoltool/register.html',
+                {'user_form': user_form, 'profile_form': profile_form, 'registered': registered} )
 
 
 def user_login(request):
@@ -122,6 +159,14 @@ def user_logout(request):
 def participate(request):
     try:
         dataset_list = BasicDataset.objects.all()
+
+        # create a list of the ids of all users that can edit the datasets
+        for dataset in dataset_list:
+            idList = []
+            for editUser in dataset.editUsers.all():
+                idList.append(editUser.id)
+            dataset.editUserIds = idList
+
 
         context = {
             'dataset_list': dataset_list,
@@ -192,6 +237,22 @@ def protocolOverviewAction(request):
     elif action == 'edit':
         url = '/form/%s/' % dataset_obj.id
         return HttpResponseRedirect(url)
+
+    elif action == 'requestEdit':
+        # send_mail("Test from Django", "flfak", "switchon.vwsl@gmail.com", ["beekhuizenjohan@gmail.com"])
+        # url = '/form/%s/' % dataset_obj.id
+        # return HttpResponseRedirect(url)
+        contact_form = ContactForm
+        context = {
+            'form': contact_form,
+            'leadUser'
+            'leadName': dataset_obj.leadUser.User.Username,
+            'leadEmail': dataset_obj.leadUser.User.Email,
+        }
+        dataset_obj
+
+        return render(request, 'contact.html', context)
+
 
     return HttpResponseRedirect(reverse('protocoltool:protocoloverview_review'))
 
@@ -322,6 +383,10 @@ PARTNERS
 
 def addPartner(request):
     postDict = request.POST.dict()
+
+    # # server side checking of fields
+    # f = forms.EmailField()
+    # f.clean()
 
     # update the Partner model based on the post information from the client
     functions.createPartnerModelFromClient(postDict, False)

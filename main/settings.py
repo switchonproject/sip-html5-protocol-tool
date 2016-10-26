@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'main.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.path.join(BASE_DIR, 'db_protocoltool'),                      # Or path to database file if using sqlite3.
+        'NAME': os.path.join(BASE_DIR, 'db_protocoltool'),                     # Or path to database file if using sqlite3.
     }
 }
 
@@ -97,3 +97,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'protocoltool/static')
+
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_PORT=587
+EMAIL_HOST_USER='switchon.vwsl@gmail.com'
+EMAIL_HOST_PASSWORD='soproject'
+EMAIL_USE_TLS=True
