@@ -19,7 +19,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
 with open(os.path.join(BASE_DIR, 'main/secret_key.txt')) as f:
     SECRET_KEY = f.read().strip()
 
@@ -102,5 +101,9 @@ EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST='smtp.gmail.com'
 EMAIL_PORT=587
 EMAIL_HOST_USER='switchon.vwsl@gmail.com'
-EMAIL_HOST_PASSWORD='soproject'
+
+with open(os.path.join(BASE_DIR, 'main/emailpass.txt')) as f:
+    emailPassword = f.read().strip()
+EMAIL_HOST_PASSWORD=emailPassword
+
 EMAIL_USE_TLS=True

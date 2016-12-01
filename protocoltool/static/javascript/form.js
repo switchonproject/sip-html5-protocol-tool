@@ -52,13 +52,13 @@ $(document).ready(function(){
         */
 
         // check if all values are valid
-        validShortname = checkValidField($('#id_basic_shortname'));
+        validShortname = checkValidField($('#id_basic_shortTitle'));
         validTitle = checkValidField($('#id_basic_title'));
 
         if(validShortname === true && validTitle === true){
 
             var dataToSend = {
-                    shortname: $('#id_basic_shortname').val(),
+                    shortTitle: $('#id_basic_shortTitle').val(),
                     title: $('#id_basic_title').val(),
                     experimentIdea: $('#id_basic_experimentIdea').val(),
                     hypothesis: $('#id_basic_hypothesis').val(),

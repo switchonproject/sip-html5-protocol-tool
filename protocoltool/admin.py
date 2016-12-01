@@ -2,13 +2,13 @@ from django.contrib import admin
 from .models import BasicDataset, Partner, DataReq, ExpStep, Reporting, ExternalProtocol, UserProfile
 
 # Register your models here.
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'organisation')
 
 class BasicDatasetAdmin(admin.ModelAdmin):
     list_display = ('title',
-            'shortname',
-            'experimentIdea',
-            'hypothesis',
-            'researchObjective',
+            'shortTitle',
+            'leadUser',
             'published',
             'checked')
 
@@ -25,9 +25,9 @@ class ReportingAdmin(admin.ModelAdmin):
     list_display = ('task', 'taskNr', 'properties', 'partner', 'deadline', 'done')
 
 class ExternalProtocolAdmin(admin.ModelAdmin):
-    list_display = ('shortname', 'url', 'dateLastUpdate')
+    list_display = ('shortTitle', 'url', 'dateLastUpdate')
 
-admin.site.register(UserProfile)
+admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(BasicDataset, BasicDatasetAdmin)
 admin.site.register(Partner, PartnerAdmin)
 admin.site.register(DataReq, DataReqAdmin)

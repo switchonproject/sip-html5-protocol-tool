@@ -45,8 +45,7 @@
                 var message = "Enter the information for your protocol in the boxes below. " +
                                "You should describe experiment information, data and method steps, experiment analysis steps " +
                                "and what results will be reported. When describing the tasks, " +
-                               "it is required to fill in all fields. All saved information is to the right. To be registered " +
-                               "as Leader of the experiment (to get edit rights and allow new partners), please email: " + email
+                               "it is required to fill in all fields. All saved information is to the right."
                 setMessage("alert alert-success", "fa fa-4x fa-fw fa-pull-left fa-info-circle", message);
             </script>
 
@@ -62,14 +61,13 @@
                     <div class="row">
                         <div class="col-md-6">
                             {% for field in form.1 %}
-                                <!--Set subtitles-->
                                 {% if field.name == 'title' %}
                                 <h4>Experiment information</h4>
                                 {% endif %}
 
-                                <div id="{{ field.label }}" class="form-group">
-                                    <label for="{{ field.id_for_label }}" class="col-md-3 control-label">{{ field.label }}:</label>
-                                    <div id="{{ field.label }}_field" class="col-md-9">
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">{{ field.label }}:</label>
+                                    <div class="col-md-9">
                                         {{ field }}
                                         {{ field.errors }}
                                     </div>
@@ -111,9 +109,9 @@
                         <div class="col-md-6">
                             <h4>Partners</h4>
                             {% for field in form.1 %}
-                            <div id="{{ field.label }}" class="form-group">
-                                <label for="{{ field.id_for_label }}" class="col-md-3 control-label">{{ field.label }}:</label>
-                                <div id="{{ field.label }}_field" class="col-md-9">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">{{ field.label }}:</label>
+                                <div class="col-md-9">
                                     {{ field }}
                                     {{ field.errors }}
                                 </div>
@@ -143,7 +141,6 @@
 
                         <div class="col-md-6">
                             <input type="hidden" id="selectedPartnerID" value="-99">
-                            <!--<input type="hidden" id="selectedPartnerID" value="-99">-->
                             <h4>Stored partners:</h4>
 
                             <table id="partnerTable" class="table table-hover table-striped">
@@ -171,9 +168,9 @@
                             <h4>A) Data & method preparation </h4>
 
                             {% for field in form.1 %}
-                            <div id="{{ field.label }}" class="form-group">
-                                <label for="{{ field.id_for_label }}" class="col-md-3 control-label">{{ field.label }}:</label>
-                                <div id="{{ field.label }}_field" class="col-md-9">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">{{ field.label }}:</label>
+                                <div class="col-md-9">
                                     {{ field }}
                                     {{ field.errors }}
                                 </div>
@@ -182,7 +179,6 @@
 
                             <!--select the partner-->
                             <div class="form-group">
-                                <!--<input type="text" id="contrPartnerDataReqID" value="-99">-->
                                 <label class="col-md-3 control-label">Task leader:</label>
                                 <div class="col-md-9">
                                     <select class="form-control" id="partnerDataReq">
@@ -264,9 +260,9 @@
                             <h4>B) Experiment analysis </h4>
 
                             {% for field in form.1 %}
-                            <div id="{{ field.label }}" class="form-group">
-                                <label for="{{ field.id_for_label }}" class="col-md-3 control-label">{{ field.label }}:</label>
-                                <div id="{{ field.label }}_field" class="col-md-9">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">{{ field.label }}:</label>
+                                <div class="col-md-9">
                                     {{ field }}
                                     {{ field.errors }}
                                 </div>
@@ -355,9 +351,9 @@
                             <h4>C) Result reporting </h4>
 
                             {% for field in form.1 %}
-                            <div id="{{ field.label }}" class="form-group">
-                                <label for="{{ field.id_for_label }}" class="col-md-3 control-label">{{ field.label }}:</label>
-                                <div id="{{ field.label }}_field" class="col-md-9">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">{{ field.label }}:</label>
+                                <div class="col-md-9">
                                     {{ field }}
                                     {{ field.errors }}
                                 </div>
@@ -460,13 +456,13 @@
 <!--Load in all data from Django to javascript-->
 <script type='text/javascript'>
 
-    var datasetID = "{{ dataset_id }}";
+    var datasetID = "{{ datasetID }}";
 
-    var existingExperimentInfo = {{ existingExperimentInfoJSON|safe }};
-    var existingPartners = {{ existingPartnersJSON|safe }};
-    var existingReqs = {{ existingReqsJSON|safe }};
-    var existingExpSteps = {{ existingExpStepsJSON|safe }};
-    var existingReportings = {{ existingReportingsJSON|safe }};
+    var existingExperimentInfo = {{ experimentInfoJSON|safe }};
+    var existingPartners = {{ partnersJSON|safe }};
+    var existingReqs = {{ reqsJSON|safe }};
+    var existingExpSteps = {{ expStepsJSON|safe }};
+    var existingReportings = {{ reportingsJSON|safe }};
 
     var csrfmiddlewaretoken =  "{{ csrf_token }}";
 

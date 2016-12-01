@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>User Rights Administration</title>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+
+            <!--CSS/Bootstrap/FontAwesome-->
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+            {% load staticfiles %}
+            <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+
+            <!--Javascript-->
+            <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+            <script src="{% static 'javascript/bootbox.min.js' %}"></script>
+            <script src="{% static 'javascript/functions.js' %}"></script>
+
+    </head>
+
+    <body>
+
+        <div class="container">
+
+            {% for message in messages %}
+                <script>
+                   console.log("message");
+                   bootboxMessage = "{{ message }}"
+                   bootbox.alert(bootboxMessage)
+                </script>
+            {% endfor %}
+
+            <h1>Set edit rights for the protocol: {{ shortTitle }}</h1>
+            <hr>
+
+            <div class="row">
+                <div class="col-md-6">
+
+                    <form role="form" method="post" enctype="multipart/form-data" class="form-horizontal">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+
+                            <label class="control-label col-sm-4">Select user to add:</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" name="select_add" id="select_add_id">
+                                    {% for user_profile in non_edit_users %}
+                                    <option value="{{ user_profile.user.username }}">{{ user_profile.user.username }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="submit" style="width: 96px !important"  id="addEditUser" class="btn btn-primary active">
+                                    <i class="fa fa-plus fa-lg"></i>&nbsp&nbspAdd</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <form role="form" method="post" enctype="multipart/form-data" class="form-horizontal">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+
+                            <label class="control-label col-sm-4">Select user to remove:</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" name="select_remove" id="select_remove_id">
+                                    {% for user_profile in edit_users %}
+                                    <option value="{{ user_profile.user.username }}">{{ user_profile.user.username }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="submit" style="width: 96px !important" id="deleteEditUser" class="btn btn-primary active">
+                                    <i class="fa fa-trash-o fa-lg"></i>&nbsp&nbspRemove</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <hr>
+                    <h4>Current users with editing rights:</h4>
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th class="col-md-3"><strong>Name</strong></th>
+                                <th class="col-md-5"><strong>Email</strong></th>
+                                <th class="col-md-4"><strong>Organisation</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for userprofile in edit_users %}
+                            <tr>
+                                <th class="col-md-3">{{ userprofile.user.username }}</th>
+                                <th class="col-md-5">{{ userprofile.user.email }}</th>
+                                <th class="col-md-4">{{ userprofile.organisation }}</th>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <hr>
+
+                </div>
+
+            </div>
+
+             <div class="row">
+                 <div class="col-md-6">
+                     <form role="form" action="../../participate">
+                         <button type="submit" class="btn-lg btn-primary pull-right">Done</button>
+                     </form>
+                 </div>
+            </div>
+
+        </div>
+    </body>
+</html>

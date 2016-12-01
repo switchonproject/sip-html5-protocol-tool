@@ -1,10 +1,7 @@
 from django.conf.urls import patterns, url
-
 from protocoltool import views
 
 urlpatterns = patterns('',
-
-    #url(r'^form/$', views.formBasic, name='formbasic'),
 
     url(r'^register/$', views.register, name='register'),
     url(r'^login/$', views.user_login, name='login'),
@@ -13,13 +10,13 @@ urlpatterns = patterns('',
     url(r'^$', views.review, name='protocoloverview_review'),
     url(r'^participate/$', views.participate, name='protocoloverview_participate'),
     url(r'^review/$', views.review, name='protocoloverview_review'),
-    url(r'^contact/$', views.contact, name='contact'),
+    url(r'^granteditrights/$', views.grantEditRights, name='grant_edit_rights'),
 
-    url(r'^overviewaction/$', views.protocolOverviewAction, name='protocoloverview_action'),
+    url(r'^useradmin/(?P<datasetID>\d*)/$', views.userAdmin, name='user_admin'),
 
     url(r'^createprotocol/$', views.createProtocol, name='createprotocol'),
-    url(r'^form/(?P<dataset_id>\d*)/$', views.formAll, name='formall'),
-    url(r'^view/(?P<dataset_id>\d*)/$', views.viewProtocol, name='viewprotocol'),
+    url(r'^form/(?P<datasetID>\d*)/$', views.formAll, name='formall'),
+    url(r'^view/(?P<datasetID>\d*)/$', views.viewProtocol, name='viewprotocol'),
 
     url(r'^saveexperimentinfo/$', views.saveExperimentInfo, name='save_experiment_info'),
 

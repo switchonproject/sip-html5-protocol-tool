@@ -20,21 +20,16 @@ from reportlab.lib.enums import TA_LEFT, TA_CENTER
 from reportlab.lib.colors import Color
 from reportlab.lib.colors import (
     black,
-    blue,
 )
 
-
-import pdb
-
-
 def writeTasks(story, styles, taskList):
-
-
+    '''
+    :param story: story to which to add the taskList
+    :param styles: styling used in the story
+    :param taskList: the tasks / steps
+    :return: none
+    '''
     for task in taskList:
-
-        # taskDone = "(In progress)"
-        # if task.done == True:
-        #     taskDone = "(Done)"
 
         data = [[Paragraph('Task {}:'.format(task.taskNr), styles['label']), Paragraph(task.task.replace('\n','<br />\n'), styles['default'])],
             [Paragraph('Description:', styles['label']), Paragraph(task.properties.replace('\n','<br />\n'), styles['default'])],
@@ -63,7 +58,7 @@ def createPDF(datasetID):
 
     # Create the HttpResponse object with the appropriate PDF headers.
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename=' + basicInfo.shortname + '.pdf'
+    response['Content-Disposition'] = 'attachment; filename=' + basicInfo.shortTitle + '.pdf'
 
     styles = {
         'default': ParagraphStyle(
@@ -164,7 +159,7 @@ def createPDF(datasetID):
     im = Image(os.path.join(scriptDir, "static/img/sologo_new_cropped.png"), width=2.6*cm, height=2*cm)
     im.hAlign = 'RIGHT'
 
-    data = [[im, Paragraph('{}'.format(basicInfo.shortname), styles['title1'])]]
+    data = [[im, Paragraph('{}'.format(basicInfo.shortTitle), styles['title1'])]]
 
     t=Table(data, hAlign='LEFT', colWidths=[2 * cm, 14 * cm])
     t.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP')]))

@@ -1,59 +1,54 @@
 from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
-from django.http import Http404
 from django.shortcuts import render
-from .forms import BasicDatasetForm, PartnerForm, DataReqForm, ExpStepForm, ReportingForm, UserForm, UserProfileForm, ContactForm
-from .models import BasicDataset, Partner, DataReq, ExpStep, Reporting, ExternalProtocol
-from django import forms
+from .forms import UserForm, UserProfileForm
+from .models import UserProfile, BasicDataset, Partner, DataReq, ExpStep, Reporting, ExternalProtocol
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.messages import error
 import json
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 import datetime
 import functions, PDFexport
-
+import base64
 import pdb
 
-from django.core.exceptions import ObjectDoesNotExist   # Django exceptions
 
+def grantEditRights(request):
+    '''
+    Give edit rights based on an encoded get parameter
+    :param request: used to retrieve HTTP address of the server and the get request parameter
+    :return: a confirmation if granting the editing rights was successful
+    '''
+    if request.method == 'GET':
 
-def contact(request):
+        requestDict = dict(request.GET)
 
-    contact_form = ContactForm
+        if 'info' in requestDict.keys():
+            editInfo = base64.urlsafe_b64decode(str(requestDict['info'][0]))
 
-    if request.method == 'POST':
-        form = contact_form(data=request.POST)
+            datasetID = int(editInfo.split(",")[0])
+            coreData = BasicDataset.objects.get(id=datasetID)
 
-        if form.is_valid():
-            leadName = request.POST.get('leadName', '')
-            leadEmail = request.POST.get('leadEmail', '')
-            formContent = request.POST.get('content', '')
+            userID = int(editInfo.split(",")[1])
 
-            # # Email the profile with the contact information
-            # context = {
-            #     'contact_name': contact_name,
-            #     'contact_email': contact_email,
-            #     'form_content': form_content,
-            # })
-            # content = template.render(context)
-            #
-            # email = EmailMessage(
-            #     "New contact form submission",
-            #     content,
-            #     "Your website" +'',
-            #     ['youremail@gmail.com'],
-            #     headers = {'Reply-To': contact_email }
-            # )
-            # email.send()
+            for userProfile in UserProfile.objects.all():
+                if userProfile.user.id == userID:
+                    coreData.editUsers.add(userProfile)
 
-            send_mail("Test from Django", formContent, "switchon.vwsl@gmail.com", [leadEmail])
+                    # send an email
+                    returnMessage = functions.sendEmailConfirmationEditRights(request, datasetID, userProfile)
+                    return HttpResponse(returnMessage)
 
-            return HttpResponseRedirect('/project/participate/')
-
-    return render(request, 'contact.html', {'form': contact_form,})
+    return HttpResponse('Error in granting editing rights. Please contact switchon.vwsl@gmail.com for assistance.')
 
 
 def register(request):
+    '''
+    Register a new user
+    :param request: contains form information used to create a new userProfile
+    :return: message stating if registering was successful
+    '''
 
     registered = False
 
@@ -79,16 +74,12 @@ def register(request):
             profile = profile_form.save(commit=False)
             profile.user = user
 
-            # Now we save the UserProfile model instance.
             profile.save()
 
-            # Update our variable to tell the template registration was successful.
-            registered = True
             return HttpResponseRedirect('/project/participate/')
 
         # Invalid form or forms - mistakes or something else?
-        # Print problems to the terminal.
-        # They'll also be shown to the user.
+        # Print problems to the terminal. They'll also be shown to the user.
         else:
             print user_form.errors, profile_form.errors
             return HttpResponse("Invalid registration: " + str(user_form.errors) + ", "  + str(profile_form.errors))
@@ -106,14 +97,17 @@ def register(request):
 
 
 def user_login(request):
+    '''
+    Log in to the protocol tool
+    :param request: contains login info
+    :return: redirect to the participate overview; if login failed, give HTTP error message
+    '''
 
-    # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':
-        # Gather the username and password provided by the user.
         # This information is obtained from the login form.
-                # We use request.POST.get('<variable>') as opposed to request.POST['<variable>'],
-                # because the request.POST.get('<variable>') returns None, if the value does not exist,
-                # while the request.POST['<variable>'] will raise key error exception
+        # We use request.POST.get('<variable>') as opposed to request.POST['<variable>'],
+        # because the request.POST.get('<variable>') returns None, if the value does not exist,
+        # while the request.POST['<variable>'] will raise key error exception
         username = request.POST.get('username')
         password = request.POST.get('password')
 
@@ -140,62 +134,76 @@ def user_login(request):
             return HttpResponse("Invalid login details supplied.")
 
     # The request is not a HTTP POST, so display the login form.
-    # This scenario would most likely be a HTTP GET.
     else:
-        # No context variables to pass to the template system, hence the
-        # blank dictionary object...
-        return render(request, 'protocoltool/login.html', {})
+        # No context variables to pass to the template system, just go back to main page
+        return HttpResponseRedirect('/project/participate/')
+
 
 # Use the login_required() decorator to ensure only those logged in can access the view.
 @login_required
 def user_logout(request):
-    # Since we know the user is logged in, we can now just log them out.
-    logout(request)
 
-    # Take the user back to the homepage.
+    logout(request)    # Since we know the user is logged in, we can now just log them out.
     return HttpResponseRedirect('/project/participate/')
 
 
 def participate(request):
-    try:
-        dataset_list = BasicDataset.objects.all()
+    '''
+    Show the protocols which are ongoing, so in which the user could participate.
+    This function also handles actions of the participate page, which are recognized by a POST with a 'datasetAction'
+    :param request
+    :return: rendering of the protocoloverview web page
+    '''
 
-        # create a list of the ids of all users that can edit the datasets
-        for dataset in dataset_list:
-            idList = []
-            for editUser in dataset.editUsers.all():
-                idList.append(editUser.id)
-            dataset.editUserIds = idList
+    # check if an action button has been pressed
+    if request.method == 'POST':
+        postDict = request.POST.dict()
+        if 'datasetAction' in postDict.keys():
+            return protocolOverviewAction(request)
 
+    datasetList = BasicDataset.objects.all()
 
-        context = {
-            'dataset_list': dataset_list,
-            'show_participate': True,
-            'show_review': False,
-        }
+    # create a list of the ids of all users that can edit the datasets; use the ID of the user (not the userprofile!)
+    for dataset in datasetList:
+        idList = []
+        for editUser in dataset.editUsers.all():
+            idList.append(editUser.user.id)
+        dataset.editUserIds = idList
 
-        return render(request, 'protocoltool/protocoloverview.html', context)
+    context = {
+        'datasetList': datasetList,
+        'showParticipate': True,
+        'showReview': False,
+    }
 
-    except ObjectDoesNotExist:
-        raise Http404
+    return render(request, 'protocoltool/protocoloverview.html', context)
 
 
 def review(request):
-    try:
-        dataset_list = BasicDataset.objects.all()
-        externalProtocol_list = ExternalProtocol.objects.all()
+    '''
+    Show the protocols which are finished
+    This function also handles actions of the review page, which are recognized by a POST with a 'datasetAction'
+    :param request
+    :return: rendering of the protocoloverview web page
+    '''
 
-        context = {
-            'dataset_list': dataset_list,
-            'external_protocol_list': externalProtocol_list,
-            'show_participate': False,
-            'show_review': True,
-        }
+    # check if an action button has been pressed
+    if request.method == 'POST':
+        postDict = request.POST.dict()
+        if 'datasetAction' in postDict.keys():
+            return protocolOverviewAction(request)
 
-        return render(request, 'protocoltool/protocoloverview.html', context)
+    datasetList = BasicDataset.objects.all()
+    externalProtocolList = ExternalProtocol.objects.all()
 
-    except ObjectDoesNotExist:
-        raise Http404
+    context = {
+        'datasetList': datasetList,
+        'externalProtocolList': externalProtocolList,
+        'showParticipate': False,
+        'showReview': True,
+    }
+
+    return render(request, 'protocoltool/protocoloverview.html', context)
 
 
 def protocolOverviewAction(request):
@@ -205,155 +213,194 @@ def protocolOverviewAction(request):
 
     postDict = request.POST.dict()
 
-    dataset_id = postDict['dataset_id']
-    action = postDict['dataset_action']
-
-    dataset_obj = BasicDataset.objects.get(id=dataset_id)
+    datasetID = postDict['datasetID']
+    action = postDict['datasetAction']
+    coreData = BasicDataset.objects.get(id=datasetID)
 
     if action == 'view':
         # go to URL that shows HTML page with all form info
-        url = '/view/%s/' % dataset_obj.id
+        url = '/view/%s/' % coreData.id
         return HttpResponseRedirect(url)
 
-    if action == 'delete':
+    elif action == 'delete':
         # Remove metadata in database
-        BasicDataset.objects.filter(id=dataset_id).delete()
+        BasicDataset.objects.filter(id=datasetID).delete()
 
     elif action == 'publish':
         # Fill in dataset published field
-        dataset_obj.published = True
-        dataset_obj.save()
+        coreData.published = True
+        coreData.save()
 
     elif action == 'unpublish':
         # Empty the dataset published field
-        if dataset_obj.published is not None:
-            dataset_obj.published = False
-            dataset_obj.save()
+        if coreData.published is not None:
+            coreData.published = False
+            coreData.save()
 
     elif action == 'export':
-        response = PDFexport.createPDF(dataset_id)
+        response = PDFexport.createPDF(datasetID)
         return response
 
     elif action == 'edit':
-        url = '/form/%s/' % dataset_obj.id
+        url = '/form/%s/' % coreData.id
         return HttpResponseRedirect(url)
 
     elif action == 'requestEdit':
-        # send_mail("Test from Django", "flfak", "switchon.vwsl@gmail.com", ["beekhuizenjohan@gmail.com"])
-        # url = '/form/%s/' % dataset_obj.id
-        # return HttpResponseRedirect(url)
-        contact_form = ContactForm
-        context = {
-            'form': contact_form,
-            'leadUser'
-            'leadName': dataset_obj.leadUser.User.Username,
-            'leadEmail': dataset_obj.leadUser.User.Email,
-        }
-        dataset_obj
+        leadName = str(coreData.leadUser.user)
+        leadEmail = str(coreData.leadUser.user.email)
 
-        return render(request, 'contact.html', context)
+        alertMessage = ""
+
+        if request.user.is_authenticated():
+            username = request.user.username
+            stringToEncode = str(datasetID) + "," + str(request.user.id)
+            encodedEditRequest = base64.urlsafe_b64encode(stringToEncode)
+
+            htmlMessage = "<p>Dear " + leadName + ',<br>' + \
+            username + " wants to edit the protocol " + coreData.shortTitle + ".<br>" + "Please click " + \
+            "<a href='" + request.META['HTTP_HOST'] + "/" + "granteditrights/?info=" + \
+            encodedEditRequest + "'>HERE</a> to authorize " + username + " to edit the protocol. <br><br></p>"
+
+            nrMessagesSend = send_mail(subject="Request for edit rights Protocol Tool", message="", from_email="switchon.vwsl@gmail.com", recipient_list=[leadEmail], html_message=htmlMessage)
+
+            if nrMessagesSend > 0:
+                alertMessage = "An email has been sent to " + leadName + " (" + leadEmail + ") to request edit rights."
+            elif nrMessagesSend == 0:
+                alertMessage = "Could not send a message to " + leadName + " (" + leadEmail + "). Please contact switchon.vwsl@gmail.com."
+
+        else:      # user is not logged in
+            alertMessage = "Please log in first to send a message"
+
+        error(request, alertMessage)                    # use the message framework to send a message to the participate view
+        return HttpResponseRedirect('/participate/')    # a HttpResponse must be given as a result of the form post
+
+    elif action == 'userAdmin':
+        url = '/useradmin/%s/' % coreData.id
+        return HttpResponseRedirect(url)
+
+    else:
+        return HttpResponseRedirect('/project/participate/')
 
 
-    return HttpResponseRedirect(reverse('protocoltool:protocoloverview_review'))
+def userAdmin(request, datasetID):
+    '''
+    :param request:
+    :param datasetID: id of the dataset (=Protocol)
+    :return: render the web page of the user admin page
+    '''
+
+    context = {}
+    context['datasetID'] = datasetID
+
+    coreData = BasicDataset.objects.get(id=datasetID)
+
+    if request.method == 'POST':
+        postDict = request.POST.dict()
+
+        if "select_add" in postDict.keys():
+            # add a user
+            userToAdd = postDict["select_add"]
+
+            for userProfile in UserProfile.objects.all():
+                if userProfile.user.username == userToAdd:
+                    coreData.editUsers.add(userProfile)
+                    returnMessage = functions.sendEmailConfirmationEditRights(request, datasetID, userProfile)
+                    error(request, returnMessage)  # use the message framework to send a message to the useradmin view
+
+
+        if "select_remove" in postDict.keys():
+            # remove a user
+            userToRemove = postDict["select_remove"]
+
+            for userProfile in UserProfile.objects.all():
+                if userProfile.user.username == userToRemove:
+                    coreData.editUsers.remove(userProfile)
+
+        url = '/useradmin/%s/' % datasetID
+        return HttpResponseRedirect(url)
+
+    if request.method == 'GET':
+        context['shortTitle'] = coreData.shortTitle
+
+        editUsers = []
+        editUsersNames = []
+        for editUser in coreData.editUsers.all():
+            editUsers.append(editUser)
+            editUsersNames.append(editUser.user.username)
+        context['edit_users'] = editUsers
+
+        # get the list of non-edit users
+        nonEditUsers = []
+        for userProfile in UserProfile.objects.all():
+            if userProfile.user.username not in editUsersNames:
+                nonEditUsers.append(userProfile)
+        context['non_edit_users'] = nonEditUsers
+
+        return render(request, 'protocoltool/useradmin.html', context)
+
 
 
 def createProtocol(request):
 
     # Create empty dataset
-    core_obj = BasicDataset(
+    basicDataset = BasicDataset(
         title='',
-        shortname='',
+        shortTitle='',
         dateLastUpdate=str(datetime.date.today())
     )
 
-    core_obj.save()
+    basicDataset.save()
 
-    url = '/form/%s/' % core_obj.id
+    url = '/form/%s/' % basicDataset.id
     return HttpResponseRedirect(url)
 
 
-def viewProtocol(request, dataset_id):
+def viewProtocol(request, datasetID):
     '''
     Show all information of the protocol
-    :param request:
-    :param dataset_id: id of the protocol from the post request
-    :return:
     '''
 
-    datasetID = int(dataset_id)
-    context = getAllProtocolInfo(dataset_id)
-
-    # TEMP: Add partner info from the Partner objects
-    #TODO: use partnerinfo in the context to view partner info in the protocol
-    context['partners'] = Partner.objects.filter(dataset_id=datasetID)
+    context = functions.getProtocolInfoInJSON(datasetID)
+    basicInfo = BasicDataset.objects.get(id=datasetID)
+    context['shortTitle'] = basicInfo.shortTitle
 
     return render(request, 'protocoltool/viewprotocol.html', context)
 
 
-def formAll(request, dataset_id="0"):
+# @login_required
+def formAll(request, datasetID="0"):
     '''
     Open the form for editing
-    :param request:
-    :param dataset_id: id of the dataset to show the form
-    :return:
     '''
 
-    dataset_id = int(dataset_id)
+    # check if user has editing rights
+    if request.user.is_authenticated():
+        username = request.user.username
 
-    if request.method == 'GET' and dataset_id != 0:
-        context = getAllProtocolInfo(dataset_id)
-        return render(request, 'protocoltool/form.html', context)
+        # get all the user names that have edit rights
+        coreData = BasicDataset.objects.get(id=datasetID)
+        nameList = []
+        for editUser in coreData.editUsers.all():
+            nameList.append(editUser.user.username)
 
-    elif request.method == 'POST' and dataset_id != 0:
-        return HttpResponseRedirect(reverse('protocoltool:protocoloverview_participate'))
+        # add the leaduser to the namelist (always has rights to edit)
+        nameList.append(coreData.leadUser.user.username)
+
+        if username in nameList:
+            if request.method == 'GET' and datasetID != 0:
+                context = functions.getProtocolInfoInJSON(datasetID)
+                context['forms_list'] = functions.getAllFormInfo(datasetID)
+
+                return render(request, 'protocoltool/form.html', context)
+
+            elif request.method == 'POST' and datasetID != 0:
+                return HttpResponseRedirect(reverse('protocoltool:protocoloverview_participate'))
+        else:
+            return HttpResponse("You do not have permission to edit this protocol")
+    else:
+        return HttpResponse("Please log in to edit this protocol")
 
     return HttpResponseRedirect(reverse('protocoltool:protocoloverview_participate'))
-
-
-def getAllProtocolInfo(datasetID):
-    '''
-    Retrieve all info of a protocol
-    :param datasetID: ID of the dataset (protocol) to get all information from
-    :return: dictionary with all information of the dataset
-    '''
-
-    coreData = BasicDataset.objects.get(id=datasetID)
-    formCore = BasicDatasetForm(instance=coreData, auto_id='id_basic_%s')
-
-    # Load in data
-    existingExperimentInfoDict = functions.getExperimentInfoDict(datasetID)
-    existingPartnersList = functions.getPartnersList(datasetID)
-    existingReqsList = functions.getListSteps(datasetID, DataReq)
-    existingExpStepsList = functions.getListSteps(datasetID, ExpStep)
-    existingReportingsList = functions.getListSteps(datasetID, Reporting)
-
-    formPartner = PartnerForm(auto_id='id_partner_%s')
-    formDataReq = DataReqForm(auto_id='id_req_%s')
-    formExpStep = ExpStepForm(auto_id='id_exp_%s')
-    formReporting = ReportingForm(auto_id='id_reporting_%s')
-
-    formList = [
-        ['Basic', formCore],
-        ['Partner', formPartner],
-        ['DataReq', formDataReq],
-        ['ExpStep', formExpStep],
-        ['Reporting', formReporting],
-    ]
-
-    context = {}
-
-    context.update({
-        'edit': True,
-        'dataset_id': datasetID,
-        'existingExperimentInfoJSON': json.dumps(existingExperimentInfoDict),
-        'existingPartnersJSON': json.dumps(existingPartnersList),
-        'existingReqsJSON': json.dumps(existingReqsList),
-        'existingExpStepsJSON': json.dumps(existingExpStepsList),
-        'existingReportingsJSON': json.dumps(existingReportingsList),
-        'forms_list': formList
-    })
-
-    return context
 
 
 def saveExperimentInfo(request):
@@ -363,7 +410,7 @@ def saveExperimentInfo(request):
     # create new partner object
     BasicDataset.objects.filter(id=postDict['datasetID']).update(
         title=postDict['title'],
-        shortname=postDict['shortname'],
+        shortTitle=postDict['shortTitle'],
         experimentIdea=postDict['experimentIdea'],
         hypothesis=postDict['hypothesis'],
         researchObjective=postDict['researchObjective'],
@@ -383,10 +430,6 @@ PARTNERS
 
 def addPartner(request):
     postDict = request.POST.dict()
-
-    # # server side checking of fields
-    # f = forms.EmailField()
-    # f.clean()
 
     # update the Partner model based on the post information from the client
     functions.createPartnerModelFromClient(postDict, False)
@@ -475,7 +518,6 @@ def decreaseReq(request):
     # send back the new Reqs model as a list to use client side
     existingReqsList = functions.getListSteps(postDict['datasetID'], DataReq)
     return JsonResponse({'existingListJSON': json.dumps(existingReqsList)})
-
 
 # endregion
 

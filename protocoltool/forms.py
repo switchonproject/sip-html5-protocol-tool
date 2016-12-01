@@ -4,16 +4,6 @@ from django.forms.widgets import DateInput, Textarea, TextInput, EmailInput, Pas
 from django.contrib.auth.models import User
 
 
-# our new form
-class ContactForm(forms.Form):
-    leadName = forms.CharField(required=True)
-    leadEmail = forms.EmailField(required=True)
-    content = forms.CharField(
-        required=True,
-        widget=forms.Textarea
-    )
-
-
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
 
@@ -56,14 +46,14 @@ class BasicDatasetForm(forms.ModelForm):
         model = BasicDataset
         fields = [
             'title',
-            'shortname',
+            'shortTitle',
             'experimentIdea',
             'hypothesis',
             'researchObjective',
         ]
         labels = {
             'title': 'Full name',
-            'shortname': 'Short name',
+            'shortTitle': 'Short name',
             'experimentIdea': 'Experiment Idea',
             'hypothesis' : 'Hypothesis',
             'researchObjective': 'Research Objective',
@@ -72,7 +62,7 @@ class BasicDatasetForm(forms.ModelForm):
             'title': TextInput(
                 attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus'}
             ),
-            'shortname': TextInput(
+            'shortTitle': TextInput(
                 attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus'}
             ),
             'experimentIdea': Textarea(

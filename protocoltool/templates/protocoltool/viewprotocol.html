@@ -2,13 +2,12 @@
 <!--Load in all data from Django to javascript-->
 <script type='text/javascript'>
 
-    var datasetID = "{{ dataset_id }}";
-
-    var experimentInfo = {{ existingExperimentInfoJSON|safe }};
-    var partners = {{ existingPartnersJSON|safe }};
-    var reqs = {{ existingReqsJSON|safe }};
-    var expSteps = {{ existingExpStepsJSON|safe }};
-    var reportings = {{ existingReportingsJSON|safe }};
+    var datasetID = "{{ datasetID }}";
+    var experimentInfo = {{ experimentInfoJSON|safe }};
+    var partners = {{ partnersJSON|safe }};
+    var reqs = {{ reqsJSON|safe }};
+    var expSteps = {{ expStepsJSON|safe }};
+    var reportings = {{ reportingsJSON|safe }};
 
 </script>
 
@@ -22,14 +21,12 @@
             <meta name="viewport" content="width=device-width, initial-scale=1">
 
             <!--CSS/Bootstrap-->
-
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
             {% load staticfiles %}
             <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
             <link rel="stylesheet" type="text/css" href="{% static 'css/viewprotocol.css' %}" />
 
-            <!--Javascript-->
             <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
             <script src="{% static 'javascript/bootbox.min.js' %}"></script>
@@ -41,9 +38,8 @@
 
             <div class="switchon-header">
                 <span><img src="{% static 'img/sologo_new_cropped.png' %}" alt=""/></span>
-                <h1>Protocol: {{ basic.shortname }}</h1>
+                <h1>Protocol: {{ shortTitle }}</h1>
             </div>
-
 
             <hr>
             <h4> Experiment information </h4>
@@ -73,16 +69,15 @@
                         <th class="col-md-3 infotext"><strong>Organisation</strong></th>
                         <th class="col-md-1 infotext"><strong></strong></th>
                         <tbody>
-                         {% for partner in partners %}
-                            <tr><td class="col-md-3 infotext">{{ partner.name }}</td>
-                            <td class="col-md-3 infotext">{{ partner.email }}</td>
-                            <td class="col-md-3 infotext">{{ partner.organisation}}</td>
-                            <td class="col-md-1 infotext"><strong>{% if partner.lead %}lead{% endif %}</strong></td></tr>
-                         {% endfor %}
                         </tbody>
                     </table>
+
                 </div>
             </div>
+
+            <script>
+                writePartnersViewProtocol(partners);
+            </script>
 
 
             <hr>

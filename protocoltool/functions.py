@@ -1,7 +1,93 @@
 __author__ = 'beekhuiz'
-from .models import BasicDataset, Partner, DataReq, ExpStep, Reporting
-from django.forms.models import model_to_dict
+from .forms import BasicDatasetForm, PartnerForm, DataReqForm, ExpStepForm, ReportingForm, UserForm, UserProfileForm
+from .models import UserProfile, BasicDataset, Partner, DataReq, ExpStep, Reporting
+from django.core.mail import send_mail
 import datetime
+import json
+
+
+def sendEmailConfirmationEditRights(request, datasetID, userProfile):
+    '''
+    :param request: all request info; needed to retrieve the URL of the page that can now be edited
+    :param datasetID: id of the dataset (= protocol) for which editing rights are given
+    :param userProfile: the userprofile information of the person that has gained editing rights
+    :return: a message stating if an email was send succesfully to the person gaining editing rights
+    '''
+    coreData = BasicDataset.objects.get(id=datasetID)
+    leadUser = coreData.leadUser
+
+    # send an email
+    htmlMessage = "<p>Dear " + userProfile.user.username + ',<br>' + \
+                  str(leadUser) + " has given you the rights to edit the protocol " + coreData.shortTitle + ".<br>" + "Please click " + \
+                  "<a href='" + request.META['HTTP_HOST'] + "/form/" + str(datasetID) + "/" + \
+                  "'>HERE</a> to start editing the protocol.<br><br></p>"
+
+    nrMessagesSend = send_mail(subject="Edit rights granted for " + coreData.shortTitle, message="",
+                               from_email="switchon.vwsl@gmail.com", recipient_list=[str(userProfile.user.email)],
+                               html_message=htmlMessage)
+
+    if nrMessagesSend == 1:
+        returnMessage = str(leadUser) + ' has given ' + str(userProfile.user.username) + " rights to edit the protocol " + coreData.shortTitle + ". " + \
+                        "An email has been sent to " + str(userProfile.user) + " (" + str(userProfile.user.email) + ")" + " to inform about the new edit rights."
+    else:
+        returnMessage = str(leadUser) + ' has given ' + str(userProfile.user.username) + " rights to edit the protocol " + coreData.shortTitle + ". " + \
+                        "There was an error in sending an email to " + str(userProfile.user) + " (" + str(userProfile.user.email) + ")" + " to inform about the new edit rights."
+
+    return returnMessage
+
+
+
+def getProtocolInfoInJSON(datasetID):
+    '''
+    Retrieve all info of a protocol in JSON format, which can be easily read by javascript
+    :param datasetID: ID of the dataset (protocol) to get all information from
+    :return: dictionary with all information of the dataset
+    '''
+
+    # Load in data
+    experimentInfoDict = getExperimentInfoDict(datasetID)
+    partnersList = getPartnersList(datasetID)
+    reqsList = getListSteps(datasetID, DataReq)
+    expStepsList = getListSteps(datasetID, ExpStep)
+    reportingsList = getListSteps(datasetID, Reporting)
+
+    context = {}
+
+    context.update({
+        'edit': True,
+        'datasetID': datasetID,
+        'experimentInfoJSON': json.dumps(experimentInfoDict),
+        'partnersJSON': json.dumps(partnersList),
+        'reqsJSON': json.dumps(reqsList),
+        'expStepsJSON': json.dumps(expStepsList),
+        'reportingsJSON': json.dumps(reportingsList),
+    })
+
+    return context
+
+
+def getAllFormInfo(datasetID):
+    '''
+    :param datasetID: ID of the dataset (protocol) to get all information from
+    :return: a list of Django forms that are used to create the form HTML-page
+    '''
+    coreData = BasicDataset.objects.get(id=datasetID)
+    formCore = BasicDatasetForm(instance=coreData, auto_id='id_basic_%s')
+
+    formPartner = PartnerForm(auto_id='id_partner_%s')
+    formDataReq = DataReqForm(auto_id='id_req_%s')
+    formExpStep = ExpStepForm(auto_id='id_exp_%s')
+    formReporting = ReportingForm(auto_id='id_reporting_%s')
+
+    formList = [
+        ['Basic', formCore],
+        ['Partner', formPartner],
+        ['DataReq', formDataReq],
+        ['ExpStep', formExpStep],
+        ['Reporting', formReporting],
+    ]
+
+    return formList
 
 
 def updateLastUpdate(datasetID):
@@ -56,7 +142,7 @@ def getExperimentInfoDict(datasetID):
 
     existingExpertimentInfoDict = {
             'title': existingExpertimentInfo.title,
-            'shortname': existingExpertimentInfo.shortname,
+            'shortTitle': existingExpertimentInfo.shortTitle,
             'experimentIdea': existingExpertimentInfo.experimentIdea,
             'hypothesis': existingExpertimentInfo.hypothesis,
             'researchObjective': existingExpertimentInfo.researchObjective,
@@ -99,7 +185,7 @@ def createStepModelFromClient(postDict, update, allObjects):
     dataset = BasicDataset.objects.get(id=postDict['datasetID'])
     partner = Partner.objects.get(id=postDict['partnerID'])
 
-    # store the 'done' checkbox as a boolean
+    # convert the 'done' checkbox to a boolean
     done = True
     if postDict['done'] == 'False':
         done = False
@@ -131,18 +217,20 @@ def createStepModelFromClient(postDict, update, allObjects):
 
 
 def getListSteps(datasetID, allObjects):
-    '''
-    Store all information in an array list
-    :param datasetID: id of the dataset for which the info are retrieved
-    :return: list with all Result Reporting information
-    '''
-    existingObjects = allObjects.objects.filter(dataset__id=datasetID)
 
+    '''
+    Convert Django objects to a sorted list of dictionaries for use in the form
+    :param datasetID: id of the dataset for which the info are retrieved
+    :param allObjects: the objects (i.e. DataReq, ExpSteps or Reportings) that are converted to a list of dics
+    :return: sorted list if dictionaries of all objects
+    '''
+
+    existingObjects = allObjects.objects.filter(dataset__id=datasetID)
     existingObjectsList = []
 
     for existingObject in existingObjects:
 
-        reportingDict = {
+        objectDict = {
             "id": existingObject.id,
             "taskNr": existingObject.taskNr,
             "task": existingObject.task,
@@ -152,7 +240,7 @@ def getListSteps(datasetID, allObjects):
             "deadline": str(existingObject.deadline),
             "done": str(existingObject.done),
         }
-        existingObjectsList.append(reportingDict)
+        existingObjectsList.append(objectDict)
 
     # sort on taskNr for better visualisation
     existingObjectsListSorted = sorted(existingObjectsList, key=lambda k: k['taskNr'])
@@ -163,8 +251,8 @@ def getListSteps(datasetID, allObjects):
 def getNewTaskNr(datasetID, allObjects):
     '''
     Gets a new task number when a new object is added to the list
-    :param datasetID:
-    :param allObjects:
+    :param datasetID: id of the dataset (=protocol)
+    :param allObjects: the objects (i.e. DataReq, ExpSteps or Reportings)
     :return: highest task number + 1
     '''
     datasetObjects = allObjects.objects.filter(dataset__id=datasetID)
@@ -182,6 +270,13 @@ def getNewTaskNr(datasetID, allObjects):
 
 
 def updateTaskNrs(datasetID, objectID, allObjects):
+    '''
+    Update the task numbers when a step is deleted
+    :param datasetID: id of the dataset (=protocol)
+    :param objectID: the id of the object
+    :param allObjects: the objects (i.e. DataReq, ExpSteps or Reportings)
+    :return: none
+    '''
 
     datasetObjects = allObjects.objects.filter(dataset__id=datasetID)
     deletedObject = allObjects.objects.get(pk=objectID)
@@ -196,6 +291,13 @@ def updateTaskNrs(datasetID, objectID, allObjects):
 
 
 def increaseTaskNr(datasetID, objectID, allObjects):
+    '''
+    Move task one position (task nr) up; thus decrease the task nr. This means that the other task needs to increase the task nr.
+    :param datasetID: id of the dataset (=protocol)
+    :param objectID: the id of the object
+    :param allObjects: the objects (i.e. DataReq, ExpSteps or Reportings)
+    :return: none
+    '''
 
     objectToIncr = allObjects.objects.get(pk=objectID)
     origTaskNr = objectToIncr.taskNr
@@ -210,7 +312,15 @@ def increaseTaskNr(datasetID, objectID, allObjects):
         objectToDecr.taskNr = origTaskNr
         objectToDecr.save()
 
+
 def decreaseTaskNr(datasetID, objectID, allObjects):
+    '''
+    Move task one position (task nr) down; thus increase the task nr. This means that the other task needs to decrease the task nr.
+    :param datasetID: id of the dataset (=protocol)
+    :param objectID: the id of the object
+    :param allObjects: the objects (i.e. DataReq, ExpSteps or Reportings)
+    :return: none
+    '''
 
     objectToDecr = allObjects.objects.get(pk=objectID)
     origTaskNr = objectToDecr.taskNr

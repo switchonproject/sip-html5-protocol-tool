@@ -2,19 +2,15 @@ from django.db import models
 from django.contrib.auth.models import User
 import datetime
 
-from django.contrib.auth.models import User
-
-
 
 class UserProfile(models.Model):
-    # This line is required. Links UserProfile to a User model instance.
+    # Link UserProfile to a User model instance.
     user = models.OneToOneField(User)
 
-    # The additional attributes we wish to include.
-    # website = models.URLField(blank=True)
+    # The additional attributes we wish to include
     organisation = models.CharField(max_length=100)
 
-    # Override the __unicode__() method to return out something meaningful!
+    # Override the __unicode__() method to return out something meaningful
     def __unicode__(self):
         return self.user.username
 
@@ -24,7 +20,7 @@ class BasicDataset(models.Model):
         return self.title
 
     title = models.CharField(max_length=200)
-    shortname = models.CharField(max_length=100)
+    shortTitle = models.CharField(max_length=100)    # a short name for the title
     experimentIdea = models.TextField(blank=True)
     hypothesis = models.TextField(blank=True)
     researchObjective = models.TextField(blank=True)
@@ -34,7 +30,7 @@ class BasicDataset(models.Model):
     published = models.BooleanField(default=False)
 
     leadUser = models.ForeignKey(UserProfile, related_name="lead_user", null=True)
-    editUsers = models.ManyToManyField(UserProfile, related_name="edit_users", null=True)
+    editUsers = models.ManyToManyField(UserProfile, related_name="edit_users")
 
 
 class Partner(models.Model):
@@ -79,6 +75,6 @@ class Reporting(models.Model):
 
 
 class ExternalProtocol(models.Model):
-    shortname = models.CharField(max_length=200)
+    shortTitle = models.CharField(max_length=200)
     url = models.URLField(max_length=200)
     dateLastUpdate = models.DateField(blank=True, default=datetime.date.today)

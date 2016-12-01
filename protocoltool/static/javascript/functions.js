@@ -25,6 +25,7 @@ function removePartnerErrorClasses() {
 }
 
 
+
 function writeStepsViewProtocol(steps, table) {
 
     var nrSteps = steps.length;
@@ -45,6 +46,27 @@ function writeStepsViewProtocol(steps, table) {
         writeLabelLine("#" + table + " > tbody", "Task leader:", steps[i].partnerName);
         writeLabelLine("#" + table + " > tbody", "Deadline:", steps[i].deadline);
         writeLabelLine("#" + table + " > tbody", "", "");
+    }
+}
+
+
+function writePartnersViewProtocol(partners) {
+
+    var nrPartners = partners.length;
+
+    for(i = 0; i < nrPartners; i++){
+
+        var leadText = ""
+        if(partners[i].lead == 'True'){
+            leadText = "lead"
+        }
+
+        $('#partnerTable > tbody').append(
+            '<tr><td class="col-md-3 infotext">' + partners[i].name + '</td>' +
+            '<td class="col-md-3 infotext">' + partners[i].email + '</td>' +
+            '<td class="col-md-3 infotext">' + partners[i].organisation + '</td>' +
+            '<td class="col-md-1 infotext"><strong>' + leadText + '</strong></td></tr>'
+        )
     }
 }
 
@@ -72,47 +94,6 @@ function removeReportingErrorClasses() {
     $('#partnerReporting').removeClass('error');
     $('#id_reporting_deadline').removeClass('error');
 }
-
-
-//function checkValidFields(listItems){
-//
-//    removeErrorClasses();   // clear all error classes
-//
-//    var nrItems = listItems.length
-//    var allValid = True
-//
-//     for (i = 0; i < nrItems; i++) {
-//
-//        item = $(i[0]); // get the item using the ID
-//
-//        if(i[1] === 'text'){
-//           if(item.val() === null || item.val() === "" ){
-//                item.addClass('error');
-//                allValid = False;
-//            }
-//        }
-//
-//        if(i[1] === 'date'){
-//            dateString = item.val();
-//            var bits = dateString.split('-');
-//            var d = new Date(bits[0], bits[1] - 1, bits[2]);
-//
-//            if(d && (d.getMonth() + 1) == bits[1]){
-//                console.log('valid date');
-//            }
-//            else{
-//                item.addClass('error');
-//                allValid = False;
-//            }
-//        }
-//     } // end for
-//
-//     console.log(listItems);
-//     console.log(allValid);
-//     return allValid;
-//
-//} // end checkValidFields
-
 
 function checkValidField(item){
     /*
@@ -161,12 +142,6 @@ function validateEmail(item)
 }
 
 
-function register()
-{
-    alert("Register!!")
-}
-
-
 function checkValidDate(item) {
     // input is always (standard for date field HTML5) YYYY-mm-dd
     dateString = item.val();
@@ -197,7 +172,7 @@ function finish() {
     /*
     user presses the finish button; check if full name and short name are filled in
     */
-    validShortname = checkValidField($('#id_basic_shortname'));
+    validShortname = checkValidField($('#id_basic_shortTitle'));
     validTitle = checkValidField($('#id_basic_title'));
 
     if (validShortname && validTitle){
@@ -253,7 +228,7 @@ function refreshExperimentInfo(){
     $("#experimentTable tbody tr").remove();
 
     writeLabelTwoLines("#experimentTable > tbody", "Full name:", existingExperimentInfo.title);
-    writeLabelTwoLines("#experimentTable > tbody", "Short name:", existingExperimentInfo.shortname);
+    writeLabelTwoLines("#experimentTable > tbody", "Short name:", existingExperimentInfo.shortTitle);
     writeLabelTwoLines("#experimentTable > tbody", "Idea:", existingExperimentInfo.experimentIdea);
     writeLabelTwoLines("#experimentTable > tbody", "Hypothesis:", existingExperimentInfo.hypothesis);
     writeLabelTwoLines("#experimentTable > tbody", "Objective:", existingExperimentInfo.researchObjective);
@@ -276,7 +251,6 @@ function refreshPartners(){
     // reset selected partner ID
     $('#selectedPartnerID').val('-99')
 
-
     // reset partner table
     var arrayLength = existingPartners.length;
     $("#partnerTable tbody tr").remove();
@@ -291,8 +265,7 @@ function refreshPartners(){
         '<td class="col-md-5">' + existingPartners[i].organisation + '</td><td class="col-md-2">' + leadText + '</td></tr>');
     }
 
-
-    // also refresh the partners in the reqs table
+    // refresh partners in the reqs table
     selectedPartnerID = $("#partnerDataReq").val()  // temporary store selected partner
     $("#partnerDataReq").empty();
     for (i = 0; i < arrayLength; i++) {
@@ -300,8 +273,7 @@ function refreshPartners(){
     }
     $("#partnerDataReq").val(selectedPartnerID)
 
-
-    // also refresh the partners in the exp steps table
+    // refresh the partners in exp steps table
     selectedPartnerID = $("#partnerExpStep").val()  // temporary store selected partner
     $("#partnerExpStep").empty();
     for (i = 0; i < arrayLength; i++) {
@@ -309,7 +281,7 @@ function refreshPartners(){
     }
     $("#partnerExpStep").val(selectedPartnerID)
 
-    // also refresh the partners in the reporting table
+    // refresh partners in reporting table
     selectedPartnerID = $("#partnerReporting").val()  // temporary store selected partner
     $("#partnerReporting").empty();
     for (i = 0; i < arrayLength; i++) {
@@ -389,7 +361,6 @@ function refreshReqs(existingList){
             contrPartner = getPartnerByID(existingReqs[i].partnerID);
 
             $('#partnerDataReq').val(contrPartner.id);
-
             setButtonsReq(true); // update buttons
         }
     } // end for
@@ -465,9 +436,7 @@ function refreshExpSteps(existingList){
             }
 
             contrPartner = getPartnerByID(existingExpSteps[i].partnerID);
-
             $('#partnerExpStep').val(contrPartner.id);
-
             setButtonsExpStep(true); // update buttons
         }
     } // end for
@@ -541,14 +510,11 @@ function refreshReporting(existingList){
             }
 
             contrPartner = getPartnerByID(existingReportings[i].partnerID);
-
             $('#partnerReporting').val(contrPartner.id);
-
             setButtonsReporting(true); // update buttons
         }
     } // end for
-
-}
+} // end refreshReporting
 
 function getPartnerByID(partnerID){
     /*
