@@ -17,6 +17,49 @@
             <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
+            <!--Capcha-->
+            <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.realperson.css' %}">
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+            <script src="{% static 'javascript/jquery.plugin.js' %}"></script>
+            <script src="{% static 'javascript/jquery.realperson.js' %}"></script>
+            <script>
+            $(function() {
+                $('#textFieldID').realperson();
+            });
+
+            function checkform() {
+                try {
+                    var text = $('#textFieldID').val();
+                    var hash = $('#textFieldID').realperson('getHash');
+                    console.log(hash);
+                    var check = rphash(text);
+                    console.log(check);
+
+                    if (hash == check) {
+                        return true;
+                    }
+                    else {
+                        alert('Please fill in the correct capcha');
+                        return false;
+                    }
+                }
+                catch(err) {
+                    console.log(err);
+                }
+                return false;
+            };
+
+            function rphash(value) {
+                var hash = 5381;
+                for (var i = 0; i < value.length; i++) {
+                    hash = ((hash << 5) + hash) + value.charCodeAt(i);
+                }
+                return hash;
+            }
+
+            </script>
+
     </head>
 
     <body>
@@ -30,7 +73,7 @@
             <a href="/project/">Return to the homepage.</a><br />
             {% else %}
 
-            <form id="user_form" role="form" method="post" action="/project/register/" enctype="multipart/form-data" class="form-horizontal">
+            <form id="user_form" role="form" method="post" action="/project/register/" onsubmit="return checkform()" enctype="multipart/form-data" class="form-horizontal">
                 <div class="row">
                     <div class="col-md-6">
                         {% csrf_token %}
@@ -58,8 +101,13 @@
                             </div>
 
                         {% endfor %}
+
+                        <div>
+                            <label>Please fill in the capcha:</label>
+                            <input type="text" id="textFieldID" name="textFieldID">
+                        </div>
                     </div>
-                </div>
+
 
                 <div class="row">
                     <div class="col-md-6">
