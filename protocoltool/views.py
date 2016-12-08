@@ -11,7 +11,6 @@ from django.contrib.auth.decorators import login_required
 import datetime
 import functions, PDFexport
 import base64
-import pdb
 
 
 def grantEditRights(request):
@@ -49,8 +48,6 @@ def register(request):
     :param request: contains form information used to create a new userProfile
     :return: message stating if registering was successful
     '''
-
-    registered = False
 
     if request.method == 'POST':
         # Attempt to grab information from the raw form information.
@@ -93,7 +90,7 @@ def register(request):
 
         return render(request,
                 'protocoltool/register.html',
-                {'user_form': user_form, 'profile_form': profile_form, 'registered': registered} )
+                {'user_form': user_form, 'profile_form': profile_form} )
 
 
 def user_login(request):
