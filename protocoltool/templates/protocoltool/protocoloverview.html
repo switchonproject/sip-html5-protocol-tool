@@ -22,8 +22,55 @@
 
     <body>
 
-        <div class="container">
+        <!-- TOOLBAR -->
+        <nav class="navbar navbar-inverse">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand" href="#">Water Switch-ON</a>
+            </div>
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="">Home</a></li>
+              <li><a href="/participate">Participate</a></li>
+              <li><a href="/review">Review</a></li>
+              <li><a href="/form">Add new protocol</a></li>
+            </ul>
 
+            <div class="container">
+            {% if user.is_authenticated %}
+            <form class="form-inline pull-right" role="form" method="post" action="/project/logout/">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning btn-sm">
+                    <i class="fa fa-sign-out"></i>&nbsp&nbspLog Out
+                </button>
+
+            </form>
+            {% else %}
+
+            <button type="button" class="btn btn-primary btn-sm pull-right" id="registerbuttonid"
+                    onclick="window.location.assign('/project/register/')">
+                    <i class="fa fa-user-plus"></i>&nbsp&nbspRegister
+            </button>
+
+            <form class="form-inline pull-right" role="form" autocomplete="off" method="post" action="/project/login/">
+                {% csrf_token %}
+                <div class="form-group form-group-sm">
+                    <input type="text" class="form-control" placeholder="username" value="" name="username" size="15">
+                </div>
+                <div class="form-group form-group-sm">
+                    <input type="password" class="form-control" value="" placeholder="password" name="password" size="15">
+                </div>
+                <button type="submit" class="btn btn-success btn-sm">
+                    <i class="fa fa-sign-in"></i>&nbsp&nbspLog In
+                </button>
+            </form>
+
+            {% endif %}
+            </div>
+          </div>
+        </nav>
+        <!-- END TOOLBAR -->
+
+        <div class="container">
             <div class="switchon-header">
                 <span><img src="{% static 'img/sologo_new_cropped.png' %}" alt=""/></span>
                 <h1>Protocol Tool</h1>
@@ -90,36 +137,6 @@
                                 <i class="fa fa-user"></i>&nbsp&nbspAdmin
                             </button>
                         </form>
-
-                        {% if user.is_authenticated %}
-                        <form class="form-inline pull-right" role="form" method="post" action="/project/logout/">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-warning btn-sm">
-                                <i class="fa fa-sign-out"></i>&nbsp&nbspLog Out
-                            </button>
-
-                        </form>
-                        {% else %}
-
-                        <button type="button" class="btn btn-primary btn-sm pull-right" id="registerbuttonid"
-                                onclick="window.location.assign('/project/register/')">
-                                <i class="fa fa-user-plus"></i>&nbsp&nbspRegister
-                        </button>
-
-                        <form class="form-inline pull-right" role="form" autocomplete="off" method="post" action="/project/login/">
-                            {% csrf_token %}
-                            <div class="form-group form-group-sm">
-                                <input type="text" class="form-control" placeholder="username" value="" name="username" size="15">
-                            </div>
-                            <div class="form-group form-group-sm">
-                                <input type="password" class="form-control" value="" placeholder="password" name="password" size="15">
-                            </div>
-                            <button type="submit" class="btn btn-success btn-sm">
-                                <i class="fa fa-sign-in"></i>&nbsp&nbspLog In
-                            </button>
-                        </form>
-
-                        {% endif %}
 
                     {% endif %}
 
@@ -206,8 +223,8 @@
                                                     Review or repeat
                                                 </td>
                                                 <td class="col-md-4">
-                                                    <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="view" onclick="viewProtocol(this)">View protocol</button>
-                                                    <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="viewprotocol" onclick="exportProtocol(this)">Download PDF</button>
+                                                    <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="view" onclick=viewProtocol(this)>View protocol</button>
+                                                    <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="viewprotocol" onclick=exportProtocol(this)>Download PDF</button>
                                                 </td>
                                             </tr>
                                             {% endif %}
@@ -277,7 +294,7 @@
             </div> <!-- End Panel-->
         </div> <!--END Container-->
 
-        <form id="dataset_action_form" method="post">
+        <form id="dataset_action_form" method="post" target="_blank">
             {% csrf_token %}
 
             <input type="hidden" name="showReview" value="{{ showReview }}">

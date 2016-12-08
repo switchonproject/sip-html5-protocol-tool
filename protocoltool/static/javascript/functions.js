@@ -40,9 +40,10 @@ function writeStepsViewProtocol(steps, table) {
         else {
             doneText += " (In progress):";
         }
-
+        console.log((steps[i].links));
         writeLabelLine("#" + table + " > tbody", doneText, steps[i].task);
         writeLabelLine("#" + table + " > tbody", "Description:", steps[i].properties);
+        if (steps[i].links !== "") { writeLabelLine("#" + table + " > tbody", "Links:", steps[i].links); }
         writeLabelLine("#" + table + " > tbody", "Task leader:", steps[i].partnerName);
         writeLabelLine("#" + table + " > tbody", "Deadline:", steps[i].deadline);
         writeLabelLine("#" + table + " > tbody", "", "");
@@ -157,7 +158,6 @@ function checkValidDate(item) {
         return false;
     }
 }
-
 
 function warningPopup(messageText){
     /*
@@ -299,6 +299,7 @@ function refreshReqs(existingList){
     $('#id_req_done').prop('checked', false)
     $('#id_req_task').val("")
     $('#id_req_properties').val("")
+    $('#id_req_links').val("")
 
     $("#partnerDataReq").empty();
     var arrayLength = existingPartners.length;
@@ -350,7 +351,9 @@ function refreshReqs(existingList){
 
             $('#id_req_task').val(existingReqs[i].task);
             $('#id_req_properties').val(existingReqs[i].properties);
+            $('#id_req_links').val(existingReqs[i].links);
             $('#id_req_deadline').val(existingReqs[i].deadline);
+
             if(existingReqs[i].done == 'True'){
                 $('#id_done').prop('checked', true);
             }
@@ -616,6 +619,7 @@ function sendReqInfoToServer(update){
         datasetID: datasetID,
         task: $('#id_req_task').val(),
         properties: $('#id_req_properties').val(),
+        links: $('#id_req_links').val(),
         partnerID: $("#partnerDataReq").val(),
         deadline: $('#id_req_deadline').val(),
         done: done,

@@ -31,10 +31,16 @@ def writeTasks(story, styles, taskList):
     '''
     for task in taskList:
 
-        data = [[Paragraph('Task {}:'.format(task.taskNr), styles['label']), Paragraph(task.task.replace('\n','<br />\n'), styles['default'])],
-            [Paragraph('Description:', styles['label']), Paragraph(task.properties.replace('\n','<br />\n'), styles['default'])],
-           [Paragraph('Task leader:', styles['label']), Paragraph(task.partner.name, styles['default'])],
-           [Paragraph('Deadline:', styles['label']), Paragraph(str(task.deadline), styles['default'])]]
+        elem0 = [Paragraph('Task {}:'.format(task.taskNr), styles['label']), Paragraph(task.task.replace('\n','<br />\n'), styles['default'])]
+        elem1 = [Paragraph('Description:', styles['label']), Paragraph(task.properties.replace('\n','<br />\n'), styles['default'])]
+        elem2 = [Paragraph('Links:', styles['label']), Paragraph(task.links.replace('\n','<br />\n'), styles['default'])]
+        elem3 = [Paragraph('Task leader:', styles['label']), Paragraph(task.partner.name, styles['default'])]
+        elem4 = [Paragraph('Deadline:', styles['label']), Paragraph(str(task.deadline), styles['default'])]
+
+        if (task.links != ""):
+            data = [elem0, elem1, elem2, elem3, elem4]
+        else:
+            data = [elem0, elem1, elem3, elem4]
 
         t=Table(data, hAlign='LEFT', colWidths=[4 * cm, 12 * cm])
         t.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP')]))
