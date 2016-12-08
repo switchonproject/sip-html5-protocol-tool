@@ -184,6 +184,7 @@ $(document).ready(function(){
 
                 $('#id_req_task').val(existingReqs[i].task);
                 $('#id_req_properties').val(existingReqs[i].properties);
+                $('#id_req_links').val(existingReqs[i].links);
                 $('#id_req_deadline').val(existingReqs[i].deadline);
                 if(existingReqs[i].done == 'True'){
                     $('#id_req_done').prop('checked', true);

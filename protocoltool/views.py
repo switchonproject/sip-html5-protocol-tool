@@ -227,6 +227,7 @@ def protocolOverviewAction(request):
         # Fill in dataset published field
         coreData.published = True
         coreData.save()
+        return HttpResponseRedirect('/project/review/')
 
     elif action == 'unpublish':
         # Empty the dataset published field
@@ -275,8 +276,7 @@ def protocolOverviewAction(request):
         url = '/useradmin/%s/' % coreData.id
         return HttpResponseRedirect(url)
 
-    else:
-        return HttpResponseRedirect('/project/participate/')
+    return HttpResponseRedirect('/project/participate/')
 
 
 def userAdmin(request, datasetID):

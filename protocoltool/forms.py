@@ -106,12 +106,14 @@ class DataReqForm(forms.ModelForm):
         fields = [
             'task',
             'properties',
+            'links',
             'deadline',
             'done',
         ]
         labels = {
             'task': 'Task',
-            'properties': 'Description and links',
+            'properties': 'Description',
+            'links': 'Links',
             'deadline': 'Deadline',
             'done': 'Done',
         }
@@ -122,8 +124,10 @@ class DataReqForm(forms.ModelForm):
             ),
             'properties': Textarea(
                 attrs={'rows':3, 'style':'resize:vertical;', 'class': 'form-control input-sm', 'placeholder':
-                    'e.g. time-period, study sites/geographical domain, resolution, formats, computational routines, detailed protocol. ' +
-                    'ENTER LINKS TO DATA & COMPUTATIONAL TOOLS HERE!'}
+                    'e.g. time-period, study sites/geographical domain, resolution, formats, computational routines, detailed protocol. '}
+            ),
+            'links': TextInput(
+                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus', 'placeholder': 'http://www.example.org; http://www.secondexample.org'}
             ),
             'deadline': DateInput(
                 attrs={'class': 'form-control input-sm', 'type': 'date', 'placeholder': 'yyyy-mm-dd'}

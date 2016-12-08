@@ -195,6 +195,7 @@ def createStepModelFromClient(postDict, update, allObjects):
             dataset = dataset,
             task=postDict['task'],
             properties=postDict['properties'],
+            links=postDict['links'],
             partner = partner,
             deadline=postDict['deadline'],
             done=done
@@ -206,6 +207,7 @@ def createStepModelFromClient(postDict, update, allObjects):
             task=postDict['task'],
             taskNr=getNewTaskNr(postDict['datasetID'], allObjects),
             properties=postDict['properties'],
+            links=postDict['links'],
             partner = partner,
             deadline=postDict['deadline'],
             done=done
@@ -235,11 +237,13 @@ def getListSteps(datasetID, allObjects):
             "taskNr": existingObject.taskNr,
             "task": existingObject.task,
             "properties": existingObject.properties,
+            "links": existingObject.links,
             "partnerID": existingObject.partner.id,
             "partnerName": existingObject.partner.name,
             "deadline": str(existingObject.deadline),
             "done": str(existingObject.done),
         }
+
         existingObjectsList.append(objectDict)
 
     # sort on taskNr for better visualisation
