@@ -339,17 +339,23 @@ def userAdmin(request, datasetID):
 
 def createProtocol(request):
 
-    # Create empty dataset
-    basicDataset = BasicDataset(
-        title='',
-        shortTitle='',
-        dateLastUpdate=str(datetime.date.today())
-    )
+    if request.user.is_authenticated():
 
-    basicDataset.save()
+        # Create empty dataset
+        basicDataset = BasicDataset(
+            title='',
+            shortTitle='',
+            leadUser=UserProfile.objects.get(user=request.user),
+            dateLastUpdate=str(datetime.date.today())
+        )
 
-    url = '/form/%s/' % basicDataset.id
-    return HttpResponseRedirect(url)
+        basicDataset.save()
+        url = '/form/%s/' % basicDataset.id
+        return HttpResponseRedirect(url)
+
+    else:
+        return HttpResponse("Please log in first")
+
 
 
 def viewProtocol(request, datasetID):

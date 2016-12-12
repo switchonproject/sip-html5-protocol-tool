@@ -95,7 +95,8 @@
                 setMessage("alert alert-success", "fa fa-4x fa-fw fa-pull-left fa-info-circle", message);
             </script>
 
-            <form role="form" id="dataset_form" class="form-horizontal" action="/project/form/{% if edit %}{{ dataset_id }}/{% endif %}" method="post">
+            <!--<form role="form" id="dataset_form" class="form-horizontal" action="/project/form/{% if edit %}{{ dataset_id }}/{% endif %}" method="post">-->
+            <form role="form" id="dataset_form" class="form-horizontal" action="/project/participate/" method="post">
 
                 {% csrf_token %}
 

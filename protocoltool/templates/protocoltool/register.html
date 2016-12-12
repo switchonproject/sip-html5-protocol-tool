@@ -69,11 +69,6 @@
 
             <h1>Register</h1>
 
-            {% if registered %}
-            <strong>Thank you for registering!</strong>
-            <a href="/project/">Return to the homepage.</a><br />
-            {% else %}
-
             <form id="user_form" role="form" method="post" action="/project/register/" onsubmit="return checkform()" enctype="multipart/form-data" class="form-horizontal">
                 <div class="row">
                     <div class="col-md-6">
@@ -123,7 +118,6 @@
 
             </form>
 
-            {% endif %}
         </div>
     </body>
 </html>
