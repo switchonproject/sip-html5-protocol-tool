@@ -219,9 +219,11 @@ def protocolOverviewAction(request):
         url = '/view/%s/' % coreData.id
         return HttpResponseRedirect(url)
 
-    elif action == 'delete':
-        # Remove metadata in database
-        BasicDataset.objects.filter(id=datasetID).delete()
+    elif action == 'deleteProtocol':
+        # set the hidden = True
+        coreData.hidden = True
+        coreData.save()
+
 
     elif action == 'publish':
         # Fill in dataset published field
@@ -417,7 +419,7 @@ def saveExperimentInfo(request):
         experimentIdea=postDict['experimentIdea'],
         hypothesis=postDict['hypothesis'],
         researchObjective=postDict['researchObjective'],
-        checked=True,
+        hidden=False,
         dateLastUpdate=str(datetime.date.today()))
 
     # convert the basic dataset (=experiment info) to a dictionary
