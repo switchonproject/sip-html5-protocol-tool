@@ -127,8 +127,15 @@ def user_login(request):
                 return HttpResponse("Your ProtocolTool account is disabled.")
         else:
             # Bad login details were provided. So we can't log the user in.
-            print "Invalid login details: {0}, {1}".format(username, password)
-            return HttpResponse("Invalid login details supplied.")
+            # DEBUG: print "Invalid login details: {0}, {1}".format(username, password)
+            response_html="""
+            <!DOCTYPE html><html><body><p><b>
+            Invalid login details supplied.</b><br/>
+            Please click on the following link if you have forgotten your credentials:
+            <a href="mailto:switchon.vwsl@gmail.com?Subject=Forgotten password" target="_top">Send Mail</a>
+            </p></body></html>
+            """
+            return HttpResponse(response_html)
 
     # The request is not a HTTP POST, so display the login form.
     else:
