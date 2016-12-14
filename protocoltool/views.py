@@ -301,7 +301,10 @@ def userAdmin(request, datasetID):
     context = {}
     context['datasetID'] = datasetID
 
-    coreData = BasicDataset.objects.get(id=datasetID)
+    try:
+        coreData = BasicDataset.objects.get(id=datasetID)
+    except:
+        return HttpResponse('<h2>The protocol with ID ' + str(datasetID) + " cannot be found</h2>")
 
     if request.method == 'POST':
         postDict = request.POST.dict()
@@ -369,15 +372,20 @@ def createProtocol(request):
         return HttpResponse("Please log in first")
 
 
-
 def viewProtocol(request, datasetID):
     '''
     Show all information of the protocol
     '''
 
-    context = functions.getProtocolInfoInJSON(datasetID)
-    basicInfo = BasicDataset.objects.get(id=datasetID)
-    context['shortTitle'] = basicInfo.shortTitle
+    try:
+        context = functions.getProtocolInfoInJSON(datasetID)
+
+        # get the short title as a separate attribute for easy templating in the html
+        basicInfo = BasicDataset.objects.get(id=datasetID)
+        context['shortTitle'] = basicInfo.shortTitle
+    except:
+        return HttpResponse('<h2>The protocol with ID ' + str(datasetID) + " cannot be found</h2>")
+
 
     return render(request, 'protocoltool/viewprotocol.html', context)
 
@@ -393,7 +401,11 @@ def formAll(request, datasetID="0"):
         username = request.user.username
 
         # get all the user names that have edit rights
-        coreData = BasicDataset.objects.get(id=datasetID)
+        try:
+            coreData = BasicDataset.objects.get(id=datasetID)
+        except:
+            return HttpResponse('<h2>The protocol with ID ' + str(datasetID) + " cannot be found</h2>")
+
         nameList = []
         for editUser in coreData.editUsers.all():
             nameList.append(editUser.user.username)
