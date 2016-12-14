@@ -49,6 +49,7 @@ def register(request):
     :return: message stating if registering was successful
     '''
 
+
     if request.method == 'POST':
         # Attempt to grab information from the raw form information.
         # Note that we make use of both UserForm and UserProfileForm.
@@ -70,8 +71,10 @@ def register(request):
             # This delays saving the model until we're ready to avoid integrity problems.
             profile = profile_form.save(commit=False)
             profile.user = user
-
             profile.save()
+
+            # Login after registration
+            user_login(request)
 
             return HttpResponseRedirect('/project/participate/')
 
