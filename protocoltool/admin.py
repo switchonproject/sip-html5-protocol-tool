@@ -6,11 +6,12 @@ class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'organisation')
 
 class BasicDatasetAdmin(admin.ModelAdmin):
-    list_display = ('title',
+    list_display = ('id',
+            'title',
             'shortTitle',
             'leadUser',
             'published',
-            'checked')
+            'hidden')
 
 class PartnerAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'email', 'organisation', 'lead')

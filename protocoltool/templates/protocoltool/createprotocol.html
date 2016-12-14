@@ -67,12 +67,7 @@
 
         <div class="container">
 
-            <h1>Please register or log in (if you already have an account)</h1>
-
-            {% if registered %}
-            <strong>Thank you for registering!</strong>
-            <a href="/project/">Return to the homepage.</a><br />
-            {% else %}
+            <h1>Please register or log in to create a protocol</h1>
 
             <form id="user_form" role="form" method="post" action="/project/register/" onsubmit="return checkform()" enctype="multipart/form-data" class="form-horizontal">
                 <div class="row">
@@ -123,7 +118,6 @@
 
             </form>
 
-            {% endif %}
         </div>
     </body>
 </html>

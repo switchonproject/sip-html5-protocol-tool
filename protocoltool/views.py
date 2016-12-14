@@ -229,9 +229,11 @@ def protocolOverviewAction(request):
         url = '/view/%s/' % coreData.id
         return HttpResponseRedirect(url)
 
-    elif action == 'delete':
-        # Remove metadata in database
-        BasicDataset.objects.filter(id=datasetID).delete()
+    elif action == 'deleteProtocol':
+        # set the hidden = True
+        coreData.hidden = True
+        coreData.save()
+
 
     elif action == 'publish':
         # Fill in dataset published field
@@ -349,17 +351,23 @@ def userAdmin(request, datasetID):
 
 def createProtocol(request):
 
-    # Create empty dataset
-    basicDataset = BasicDataset(
-        title='',
-        shortTitle='',
-        dateLastUpdate=str(datetime.date.today())
-    )
+    if request.user.is_authenticated():
 
-    basicDataset.save()
+        # Create empty dataset
+        basicDataset = BasicDataset(
+            title='',
+            shortTitle='',
+            leadUser=UserProfile.objects.get(user=request.user),
+            dateLastUpdate=str(datetime.date.today())
+        )
 
-    url = '/form/%s/' % basicDataset.id
-    return HttpResponseRedirect(url)
+        basicDataset.save()
+        url = '/form/%s/' % basicDataset.id
+        return HttpResponseRedirect(url)
+
+    else:
+        return HttpResponse("Please log in first")
+
 
 
 def viewProtocol(request, datasetID):
@@ -421,7 +429,7 @@ def saveExperimentInfo(request):
         experimentIdea=postDict['experimentIdea'],
         hypothesis=postDict['hypothesis'],
         researchObjective=postDict['researchObjective'],
-        checked=True,
+        hidden=False,
         dateLastUpdate=str(datetime.date.today()))
 
     # convert the basic dataset (=experiment info) to a dictionary

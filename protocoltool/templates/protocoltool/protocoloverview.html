@@ -158,7 +158,7 @@
                                 </thead>
                                 <tbody>
                                     {% for dataset in datasetList  %}
-                                        {% if dataset.checked %}
+                                        {% if dataset.hidden == False %}
                                             {% if not dataset.published  %}
                                             <tr>
                                                 <td class="col-md-4">{{ dataset.shortTitle }}</td>
@@ -173,6 +173,7 @@
                                                             <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="edit" onclick="editProtocol(this)">Edit</button>
                                                             <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="publish" onclick="publishProtocol(this)">Send to 'review or repeat'</button>
                                                             <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="useradmin" onclick="userAdmin(this)">Set user rights</button>
+                                                            <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="deleteProtocol" onclick="deleteProtocol(this)">Delete</button>
 
                                                         {% else %}
                                                             {% if user.id in dataset.editUserIds %}
@@ -212,7 +213,7 @@
                                 </thead>
                                 <tbody>
                                     {% for dataset in datasetList  %}
-                                        {% if dataset.checked %}
+                                        {% if dataset.hidden == False %}
 
                                             {% if dataset.published %}
                                             <tr>
@@ -339,6 +340,12 @@
 
     function userAdmin(instance){
         $('#datasetActionID').val("userAdmin");
+        $('#datasetID').val(instance.value);
+        $('#dataset_action_form').submit();
+    }
+
+    function deleteProtocol(instance){
+        $('#datasetActionID').val("deleteProtocol");
         $('#datasetID').val(instance.value);
         $('#dataset_action_form').submit();
     }
