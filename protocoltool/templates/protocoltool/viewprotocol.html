@@ -4,7 +4,7 @@
 
     var datasetID = "{{ datasetID }}";
     var experimentInfo = {{ experimentInfoJSON|safe }};
-    var partners = {{ partnersJSON|safe }};
+    //var partners = {{ partnersJSON|safe }};
     var reqs = {{ reqsJSON|safe }};
     var expSteps = {{ expStepsJSON|safe }};
     var reportings = {{ reportingsJSON|safe }};
@@ -107,6 +107,21 @@
             <hr>
             <h4> Partners </h4>
 
+            <!--Better code, somehow does not work yet  as it duplicates all partners..-->
+            <!--<div class="row">-->
+                <!--<div class="col-md-10">-->
+                    <!--<table id="partnerTableView" table-border="0">-->
+                        <!--<th class="col-md-3 infotext"><strong>Name</strong></th>-->
+                        <!--<th class="col-md-3 infotext"><strong>E-mail</strong></th>-->
+                        <!--<th class="col-md-3 infotext"><strong>Organisation</strong></th>-->
+                        <!--<th class="col-md-1 infotext"><strong></strong></th>-->
+                        <!--<tbody>-->
+                        <!--</tbody>-->
+                    <!--</table>-->
+
+                <!--</div>-->
+            <!--</div>-->
+
             <div class="row">
                 <div class="col-md-10">
                     <table id="partnerTable" table-border="0">
@@ -115,15 +130,17 @@
                         <th class="col-md-3 infotext"><strong>Organisation</strong></th>
                         <th class="col-md-1 infotext"><strong></strong></th>
                         <tbody>
+                         {% for partner in partners %}
+                            <tr><td class="col-md-3 infotext">{{ partner.name }}</td>
+                            <td class="col-md-3 infotext">{{ partner.email }}</td>
+                            <td class="col-md-3 infotext">{{ partner.organisation}}</td>
+                            <td class="col-md-1 infotext"><strong>{% if partner.lead %}lead{% endif %}</strong></td></tr>
+                         {% endfor %}
                         </tbody>
                     </table>
-
                 </div>
             </div>
 
-            <script>
-                writePartnersViewProtocol(partners);
-            </script>
 
 
             <hr>
@@ -132,10 +149,6 @@
                 <tbody>
                 </tbody>
             </table>
-
-            <script>
-                writeStepsViewProtocol(reqs, "methodTable");
-            </script>
 
 
             <hr>
@@ -146,10 +159,6 @@
                 </tbody>
             </table>
 
-            <script>
-                writeStepsViewProtocol(expSteps, "stepTable");
-            </script>
-
 
             <hr>
             <h4> C) Result Reporting </h4>
@@ -159,6 +168,10 @@
             </table>
 
             <script>
+
+                //writePartnersViewProtocol(partners);
+                writeStepsViewProtocol(reqs, "methodTable");
+                writeStepsViewProtocol(expSteps, "stepTable");
                 writeStepsViewProtocol(reportings, "resultTable");
             </script>
 

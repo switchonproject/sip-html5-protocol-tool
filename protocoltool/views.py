@@ -383,6 +383,7 @@ def viewProtocol(request, datasetID):
         # get the short title as a separate attribute for easy templating in the html
         basicInfo = BasicDataset.objects.get(id=datasetID)
         context['shortTitle'] = basicInfo.shortTitle
+        context['partners'] = Partner.objects.filter(dataset_id=datasetID)
     except:
         return HttpResponse('<h2>The protocol with ID ' + str(datasetID) + " cannot be found</h2>")
 

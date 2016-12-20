@@ -25,7 +25,6 @@ function removePartnerErrorClasses() {
 }
 
 
-
 function writeStepsViewProtocol(steps, table) {
 
     var nrSteps = steps.length;
@@ -52,7 +51,9 @@ function writeStepsViewProtocol(steps, table) {
 
 
 function writePartnersViewProtocol(partners) {
-
+    /*
+    TODO: Implement this function. It somehow does not work yet as all partners are duplicated.
+    */
     var nrPartners = partners.length;
 
     for(i = 0; i < nrPartners; i++){
@@ -62,7 +63,7 @@ function writePartnersViewProtocol(partners) {
             leadText = "lead"
         }
 
-        $('#partnerTable > tbody').append(
+        $('#partnerTableView > tbody').append(
             '<tr><td class="col-md-3 infotext">' + partners[i].name + '</td>' +
             '<td class="col-md-3 infotext">' + partners[i].email + '</td>' +
             '<td class="col-md-3 infotext">' + partners[i].organisation + '</td>' +
