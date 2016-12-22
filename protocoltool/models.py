@@ -26,7 +26,7 @@ class BasicDataset(models.Model):
     researchObjective = models.TextField(blank=True)
 
     dateLastUpdate = models.DateField(blank=True, default=datetime.date.today)
-    hidden = models.BooleanField(default=False)
+    hidden = models.BooleanField(default=True)
     published = models.BooleanField(default=False)
 
     leadUser = models.ForeignKey(UserProfile, related_name="lead_user", null=True)

@@ -14,7 +14,10 @@ urlpatterns = patterns('',
 
     url(r'^useradmin/(?P<datasetID>\d*)/$', views.userAdmin, name='user_admin'),
 
-    url(r'^createprotocol/$', views.createProtocol, name='createprotocol'),
+    url(r'^createprotocol/$', views.registerOrLoginCreateProtocol, name='registerOrLoginCreateProtocol'),
+    url(r'^registerandcreateprotocol/$', views.registerAndCreateProtocol, name='registerAndCreateProtocol'),
+    url(r'^loginandcreateprotocol/$', views.loginAndCreateProtocol, name='loginAndCreateProtocol'),
+
     url(r'^form/(?P<datasetID>\d*)/$', views.formAll, name='formall'),
     url(r'^view/(?P<datasetID>\d*)/$', views.viewProtocol, name='viewprotocol'),
 

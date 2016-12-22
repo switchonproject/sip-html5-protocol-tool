@@ -78,6 +78,7 @@ def register(request):
 
             return HttpResponseRedirect('/project/participate/')
 
+
         # Invalid form or forms - mistakes or something else?
         # Print problems to the terminal. They'll also be shown to the user.
         else:
@@ -351,9 +352,117 @@ def userAdmin(request, datasetID):
         return render(request, 'protocoltool/useradmin.html', context)
 
 
+def registerOrLoginCreateProtocol(request):
+    '''
+    Create a new protocol. If not logged in already, open a page to either register or login.
+    After filling in the registration info or the login info, a new protocol is made.
+    :param request:
+    :return:
+    '''
+
+    # check if user is already logged in; if yes, immediately create protocol
+    if request.user.is_authenticated():
+        return createProtocol(request)
+    else:
+        # open the register or login page
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+
+        return render(request,
+                      'protocoltool/createprotocol.html',
+                      {'user_form': user_form, 'profile_form': profile_form})
+
+
+def loginAndCreateProtocol(request):
+    '''
+    First login (check for valid credentials) and then create protocol.
+    TODO: this code is almost the same as the login procedure, could be merged / made more efficient?
+    '''
+
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+
+    user = authenticate(username=username, password=password)
+
+    # If we have a User object, the details are correct.
+    # If None (Python's way of representing the absence of a value), no user
+    # with matching credentials was found.
+    if user:
+        # Is the account active? It could have been disabled.
+        if user.is_active:
+            # If the account is valid and active, we can log the user in.
+            # We'll send the user back to the homepage.
+            login(request, user)
+            return createProtocol(request)      # TODO: Only line that is different from other login procedure
+        else:
+            # An inactive account was used - no logging in!
+            return HttpResponse("Your ProtocolTool account is disabled.")
+    else:
+        # Bad login details were provided. So we can't log the user in.
+        # DEBUG: print "Invalid login details: {0}, {1}".format(username, password)
+        response_html = """
+             <!DOCTYPE html><html><body><p><b>
+             Invalid login details supplied.</b><br/>
+             Please click on the following link if you have forgotten your credentials:
+             <a href="mailto:switchon.vwsl@gmail.com?Subject=Forgotten password" target="_top">Send Mail</a>
+             </p></body></html>
+             """
+        return HttpResponse(response_html)
+
+
+
+
+def registerAndCreateProtocol(request):
+    '''
+    Register a new user and create a new protocol afterwards
+    TODO: this code is almost the same as the register procedure, could be merged / made more efficient?
+    :param request: contains form information used to create a new userProfile
+    :return: message stating if registering was successful
+    '''
+
+    if request.method == 'POST':
+        # Attempt to grab information from the raw form information.
+        # Note that we make use of both UserForm and UserProfileForm.
+        user_form = UserForm(data=request.POST)
+        profile_form = UserProfileForm(data=request.POST)
+
+        # If the two forms are valid...
+        if user_form.is_valid() and profile_form.is_valid():
+            # Save the user's form data to the database.
+            user = user_form.save()
+
+            # Now we hash the password with the set_password method.
+            # Once hashed, we can update the user object.
+            user.set_password(user.password)
+            user.save()
+
+            # Now sort out the UserProfile instance.
+            # Since we need to set the user attribute ourselves, we set commit=False.
+            # This delays saving the model until we're ready to avoid integrity problems.
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
+
+            # Login after registration
+            user_login(request)
+
+            return createProtocol(request)
+
+        # Invalid form or forms - mistakes or something else?
+        # Print problems to the terminal. They'll also be shown to the user.
+        else:
+            print user_form.errors, profile_form.errors
+            return HttpResponse("Invalid registration: " + str(user_form.errors) + ", " + str(profile_form.errors))
+
+
 
 def createProtocol(request):
-
+    '''
+    Creates a new empty protocol (is still hidden; will be made visible if user presses the save button in the edit form..
+    else there will be many empty but visible protocols in the participate overview)
+    :param request:
+    :return: to the edit form (or message what went wrong in creating the protocol)
+    '''
     if request.user.is_authenticated():
 
         # Create empty dataset
