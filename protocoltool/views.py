@@ -470,6 +470,7 @@ def createProtocol(request):
             title='',
             shortTitle='',
             leadUser=UserProfile.objects.get(user=request.user),
+            hidden=True,
             dateLastUpdate=str(datetime.date.today())
         )
 
