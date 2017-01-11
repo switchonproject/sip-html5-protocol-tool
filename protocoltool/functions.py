@@ -15,12 +15,12 @@ def sendEmailConfirmationEditRights(request, datasetID, userProfile):
     '''
     coreData = BasicDataset.objects.get(id=datasetID)
     leadUser = coreData.leadUser
+    form_link = 'http://' + request.META['HTTP_HOST'] + "/form/" + str(datasetID)
 
     # send an email
     htmlMessage = "<p>Dear " + userProfile.user.username + ',<br>' + \
                   str(leadUser) + " has given you the rights to edit the protocol " + coreData.shortTitle + ".<br>" + "Please click " + \
-                  "<a href='" + request.META['HTTP_HOST'] + "/form/" + str(datasetID) + "/" + \
-                  "'>HERE</a> to start editing the protocol.<br><br></p>"
+                  "<a href=\""+form_link+"\">HERE</a> to start editing the protocol.<br><br></p>"
 
     nrMessagesSend = send_mail(subject="Edit rights granted for " + coreData.shortTitle, message="",
                                from_email="switchon.vwsl@gmail.com", recipient_list=[str(userProfile.user.email)],
@@ -190,12 +190,18 @@ def createStepModelFromClient(postDict, update, allObjects):
     if postDict['done'] == 'False':
         done = False
 
+    # Non mandatory field links
+    if 'links' in postDict.keys():
+        links = postDict['links']
+    else:
+        links = ''
+
     if update:
         allObjects.objects.filter(id=postDict['stepID']).update(
             dataset = dataset,
             task=postDict['task'],
             properties=postDict['properties'],
-            links=postDict['links'],
+            links=links,
             partner = partner,
             deadline=postDict['deadline'],
             done=done
@@ -207,7 +213,7 @@ def createStepModelFromClient(postDict, update, allObjects):
             task=postDict['task'],
             taskNr=getNewTaskNr(postDict['datasetID'], allObjects),
             properties=postDict['properties'],
-            links=postDict['links'],
+            links=links,
             partner = partner,
             deadline=postDict['deadline'],
             done=done

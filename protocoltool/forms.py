@@ -127,7 +127,7 @@ class DataReqForm(forms.ModelForm):
                     'e.g. time-period, study sites/geographical domain, resolution, formats, computational routines, detailed protocol. '}
             ),
             'links': TextInput(
-                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus', 'placeholder': 'http://www.example.org; http://www.secondexample.org'}
+                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus', 'placeholder': 'e.g urls associated'}
             ),
             'deadline': DateInput(
                 attrs={'class': 'form-control input-sm', 'type': 'date', 'placeholder': 'yyyy-mm-dd'}

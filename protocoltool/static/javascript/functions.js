@@ -184,7 +184,7 @@ function finish() {
 //        });
         $('#dataset_form').submit();
     }
-    else{
+    else {
         bootbox.confirm('No valid full experiment name or short name. Are you sure you wish to go back to the participate tool?', function(result){
             if(result){
                 $('#dataset_form').submit();
