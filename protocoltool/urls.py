@@ -1,7 +1,8 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import patterns, url, include
 from protocoltool import views
+from django.contrib.auth import views as auth_views
 
-urlpatterns = patterns('',
+urlpatterns = patterns('django.contrib.auth.views',
 
     url(r'^register/$', views.register, name='register'),
     url(r'^login/$', views.user_login, name='login'),
@@ -44,4 +45,6 @@ urlpatterns = patterns('',
     url(r'^deletereporting/$', views.deleteReporting, name='delete_reporting'),
     url(r'^increasereporting/$', views.increaseReporting, name='increase_reporting'),
     url(r'^decreasereporting/$', views.decreaseReporting, name='decrease_reporting'),
+
+
 )

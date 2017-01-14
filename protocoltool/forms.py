@@ -11,16 +11,16 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ['username', 'email', 'password']
         labels = {
-            'username': 'User name',
+            'username': 'Username',
             'email': 'Email',
             'password': 'Password',
         }
         widgets = {
             'username': TextInput(
-                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus'}
+                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus', 'placeholder': 'your preferred login (no spaces)'}
             ),
             'email': EmailInput(
-                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus'}
+                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus', 'placeholder': 'your email'}
             ),
             'password': PasswordInput(
                 attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus'}
