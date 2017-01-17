@@ -12,7 +12,7 @@ urlpatterns = patterns('',
     # Admin pages
     url(r'^admin/', include(admin.site.urls)),
 
-    # Password reset
+    # Accounts/Password reset
     #url(r'^accounts/', include('django.contrib.auth.urls')),
     #url(r'^accounts/password_reset/$', auth_views.password_reset, {'template_name': 'registration/password_reset_form.html'}),
     url(r'^accounts/password_reset/$', auth_views.password_reset, name='password_reset'),
