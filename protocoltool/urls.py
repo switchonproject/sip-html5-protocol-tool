@@ -7,6 +7,8 @@ urlpatterns = patterns('django.contrib.auth.views',
     url(r'^register/$', views.register, name='register'),
     url(r'^login/$', views.user_login, name='login'),
     url(r'^logout/$', views.user_logout, name='logout'),
+    url(r'^accounts/login/$', views.user_login, name='login'),
+    url(r'^accounts/logout/$', views.user_logout, name='logout'),
 
     url(r'^$', views.review, name='protocoloverview_review'),
     url(r'^participate/$', views.participate, name='protocoloverview_participate'),
