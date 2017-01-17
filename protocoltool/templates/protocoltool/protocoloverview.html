@@ -23,50 +23,59 @@
     <body>
 
         <!-- TOOLBAR -->
-        <nav class="navbar navbar-inverse">
-          <div class="container-fluid">
-            <div class="navbar-header">
-              <a class="navbar-brand" href="http://www.switch-on-vwsl.eu/">Water Switch-ON</a>
-            </div>
-            <ul class="nav navbar-nav">
-              <li><a href="/participate">Participate</a></li>
-              <li><a href="/review">Review</a></li>
-              <li><a href="/createprotocol">Add new protocol</a></li>
-            </ul>
+        <div class="navbar navbar-inverse navbar-static-top switchon-navbar">
+            <div class="container-fluid">
+                <div>
+                    <div class="navbar-header">
+                        <a class="navbar-brand switchon-navbar-container" href="http://www.switch-on-vwsl.eu/">
+                            <img class="switchon-navbar-logo" src="{% static 'img/sologo_150x150.png' %}" alt=""/>
+                        </a>
+                    </div>
+                    <div class="nav navbar-nav">
+                        <div class=>
+                            <div class="navbar-title">
+                                <h1>Virtual Water Science Laboratory</h1>
+                            </div>
+                        </div>
+                        <ul class="nav navbar-nav navbar-links">
+                            <li><a href="/participate">Participate</a></li>
+                            <li><a href="/review">Review</a></li>
+                            <li><a href="/createprotocol">Add new protocol</a></li>
+                        </ul>
+                    </div>
+                    <div class="navbar-login-options">
+                    {% if user.is_authenticated %}
+                    <form class="form-inline pull-right" role="form" method="post" action="/project/logout/">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning btn-sm">
+                            <i class="fa fa-sign-out"></i>&nbsp&nbspLog Out
+                        </button>
 
-            <div class="container">
-            {% if user.is_authenticated %}
-            <form class="form-inline pull-right" role="form" method="post" action="/project/logout/">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-warning btn-sm">
-                    <i class="fa fa-sign-out"></i>&nbsp&nbspLog Out
-                </button>
+                    </form>
+                    {% else %}
 
-            </form>
-            {% else %}
+                    <button type="button" class="btn btn-primary btn-sm pull-right" id="registerbuttonid"
+                            onclick="window.location.assign('/project/register/')">
+                            <i class="fa fa-user-plus"></i>&nbsp&nbspRegister
+                    </button>
 
-            <button type="button" class="btn btn-primary btn-sm pull-right" id="registerbuttonid"
-                    onclick="window.location.assign('/project/register/')">
-                    <i class="fa fa-user-plus"></i>&nbsp&nbspRegister
-            </button>
-
-            <form class="form-inline pull-right" role="form" autocomplete="off" method="post" action="/project/login/">
-                {% csrf_token %}
-                <div class="form-group form-group-sm">
-                    <input type="text" class="form-control" placeholder="username" value="" name="username" size="15">
+                    <form class="form-inline pull-right" role="form" autocomplete="off" method="post" action="/project/login/">
+                        {% csrf_token %}
+                        <div class="form-group form-group-sm">
+                            <input type="text" class="form-control" placeholder="username" value="" name="username" size="15">
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <input type="password" class="form-control" value="" placeholder="password" name="password" size="15">
+                        </div>
+                        <button type="submit" class="btn btn-success btn-sm">
+                            <i class="fa fa-sign-in"></i>&nbsp&nbspLog In
+                        </button>
+                    </form>
+                    {% endif %}
+                    </div>
                 </div>
-                <div class="form-group form-group-sm">
-                    <input type="password" class="form-control" value="" placeholder="password" name="password" size="15">
-                </div>
-                <button type="submit" class="btn btn-success btn-sm">
-                    <i class="fa fa-sign-in"></i>&nbsp&nbspLog In
-                </button>
-            </form>
-
-            {% endif %}
             </div>
-          </div>
-        </nav>
+        </div>
         <!-- END TOOLBAR -->
 
         <div class="container">

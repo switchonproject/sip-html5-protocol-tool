@@ -120,3 +120,54 @@ thead {
 p {
     margin-bottom: 0px;
 }
+
+/*Custom navbar*/
+.switchon-navbar{
+    background: #fff;
+    padding: 0;
+    width: 100%;
+    height: 100px;
+    background-image: url("../img/navbar_background.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.switchon-navbar-container{
+    height:100px;
+    padding:0;
+    padding-left: 15px;
+    padding-right:15px;
+}
+
+.switchon-navbar-logo{
+    max-width:100%;
+    max-height:100%;
+}
+
+.navbar-title{
+    font-family: Arial;
+    color: white;
+    max-heigth: 45px;
+    margin-top: 8px;
+}
+
+.navbar-title h1{
+    margin: 1px;
+}
+
+.navbar-links li{
+    font-size: 18px;
+    color: white;
+    font-family: Arial;
+    max-height: 40px;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    color:#FFF;
+}
+
+.navbar-login-options{
+    position: absolute;
+    bottom:10px;
+    right:10px;
+}
