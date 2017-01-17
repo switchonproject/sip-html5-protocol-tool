@@ -12,8 +12,13 @@ urlpatterns = patterns('',
     # Admin pages
     url(r'^admin/', include(admin.site.urls)),
 
-    # User authorization and password reset
-    url(r'^accounts/', include('django.contrib.auth.urls')),
+    # Password reset
+    #url(r'^accounts/', include('django.contrib.auth.urls')),
+    #url(r'^accounts/password_reset/$', auth_views.password_reset, {'template_name': 'registration/password_reset_form.html'}),
+    url(r'^accounts/password_reset/$', auth_views.password_reset, name='password_reset'),
+    url(r'^accounts/password_reset/done/$', auth_views.password_reset_done, name='password_reset_done'),
+    url(r'^accounts/reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',  auth_views.password_reset_confirm, name='password_reset_confirm'),
+    url(r'^accounts/reset/done/$', auth_views.password_reset_complete, name='password_reset_complete'),
 
     # Protocol tool urls
     url(r'^', include('protocoltool.urls', namespace='protocoltool')),
