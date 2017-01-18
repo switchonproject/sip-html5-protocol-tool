@@ -93,10 +93,6 @@
         <!-- END TOOLBAR -->
 
         <div class="container">
-
-            <div class="switchon-header">
-                <h1>Protocol: {{ shortTitle }}</h1>
-            </div>
             <div class="row">
                 {% if user.is_authenticated %}
                     {% if currentUserId == leadUserId %}
@@ -123,6 +119,11 @@
                     </script>
                 {% endif %}
             </div>
+
+            <div class="switchon-header">
+                <h1>Protocol: {{ shortTitle }}</h1>
+            </div>
+
             <hr>
             <h4> Experiment information </h4>
 

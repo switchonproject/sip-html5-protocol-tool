@@ -85,11 +85,6 @@
 
         <div class="container">
 
-            <div class="row">
-                <button id="saveAll" type="button" class="btn btn-primary" name="edit" onclick="window.location.assign('/view/{{ datasetID }}/')">Save</button>
-                <button type="button" class="btn btn-primary" name="edit" onclick="window.location.assign('/participate/')">Return</button>
-            </div>
-
             <div id="messagetype">
                 <span id="messagefa"></span>
                 <div id="messagetext"></div>
@@ -103,6 +98,11 @@
                                "it is required to fill in all fields. All saved information is to the right."
                 setMessage("alert alert-success", "fa fa-4x fa-fw fa-pull-left fa-info-circle", message);
             </script>
+
+            <div class="row">
+                <button id="saveAll" type="button" class="btn btn-primary" name="edit" onclick="window.location.assign('/view/{{ datasetID }}/')">Save</button>
+                <button type="button" class="btn btn-primary" name="edit" onclick="window.location.assign('/participate/')">Return</button>
+            </div>
 
             <!--<form role="form" id="dataset_form" class="form-horizontal" action="/project/form/{% if edit %}{{ dataset_id }}/{% endif %}" method="post">-->
             <form role="form" id="dataset_form" class="form-horizontal" action="/project/participate/" method="post">

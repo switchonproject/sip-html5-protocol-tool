@@ -192,5 +192,6 @@ p {
 .navbar-login-options{
     float: right;
     bottom: 8px;
+    right: 8px;
     position: relative;
 }
