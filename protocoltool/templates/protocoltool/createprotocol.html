@@ -67,13 +67,32 @@
 
     <body>
 
-        <div class="container">
-
-            <div class="switchon-header">
-                <span><img src="{% static 'img/sologo_new_cropped.png' %}" alt=""/></span>
-                <h1>Create new protocol</h1>
+        <!-- TOOLBAR -->
+        <div class="navbar navbar-inverse navbar-static-top switchon-navbar">
+            <div class="container-fluid">
+                <div>
+                    <div class="navbar-header">
+                        <a class="navbar-brand switchon-navbar-container" href="http://www.switch-on-vwsl.eu/">
+                            <img class="switchon-navbar-logo" src="{% static 'img/sologo_150x150.png' %}" alt=""/>
+                        </a>
+                    </div>
+                    <div class="nav navbar-nav">
+                        <div class=>
+                            <div class="navbar-title">
+                                <h1>Virtual Water Science Laboratory</h1>
+                            </div>
+                        </div>
+                        <ul class="nav navbar-nav navbar-links">
+                        </ul>
+                    </div>
+                    <div class="navbar-login-options">
+                    </div>
+                </div>
             </div>
+        </div>
+        <!-- END TOOLBAR -->
 
+        <div class="container">
             <!--The green message box on top-->
             <div id="messagetype">
                 <span id="messagefa"></span>

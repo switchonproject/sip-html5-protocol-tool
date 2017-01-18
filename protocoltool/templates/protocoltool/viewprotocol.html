@@ -92,10 +92,28 @@
         <div class="container">
 
             <div class="switchon-header">
-                <span><img src="{% static 'img/sologo_new_cropped.png' %}" alt=""/></span>
                 <h1>Protocol: {{ shortTitle }}</h1>
             </div>
+            <div class="row">
+                {% if user.is_authenticated %}
 
+                    {% if user.id == dataset.leadUser.user.id %}
+                        <button type="button" class="btn btn-primary" name="edit" action="/form/{{ datasetID }}/">Edit</button>
+                        <button type="button" class="btn btn-primary" value="{{ datasetID }}" name="publish" onclick="publishProtocol(this)">Send to 'review or repeat'</button>
+                        <button type="button" class="btn btn-primary" value="{{ datasetID }}" name="useradmin" onclick="userAdmin(this)">Set user rights</button>
+                        <button type="button" class="btn btn-primary" value="{{ datasetID }}" name="deleteProtocol" onclick="deleteProtocol(this)">Delete</button>
+
+                    {% else %}
+                        {% if user.id in dataset.editUserIds %}
+                            <button type="button" class="btn btn-primary" name="edit" action="/form/{{ datasetID }}/">Edit</button>
+                        {% else %}
+                            <button type="button" class="btn btn-primary" value="{{ datasetID }}" name="requestEdit" onclick="requestEdit(this)">Request edit rights</button>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    <button type="button" class="btn btn-primary" value="{{ datasetID }}" name="view" onclick="/login">Login to edit</button>
+                {% endif %}
+            </div>
             <hr>
             <h4> Experiment information </h4>
 
@@ -194,4 +212,5 @@
         </footer>
 
     </body>
+
 </html>
