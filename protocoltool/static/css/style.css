@@ -126,24 +126,22 @@ p {
     background: #fff;
     padding: 0;
     width: 100%;
-    height: 100px;
+    height: 90px;
     background-image: url("../img/navbar_background.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
 }
 
 .switchon-navbar-container{
-    height:100px;
+    height:90px;
     padding:0;
     padding-left: 15px;
     padding-right:15px;
-    z-index: -1;
 }
 
 .switchon-navbar-logo{
     max-width:100%;
     max-height:100%;
-
 }
 
 .navbar-title{
@@ -151,21 +149,24 @@ p {
     color: white;
     max-heigth: 45px;
     position:absolute;
-    bottom: 35px;
-    padding-left:15px;
+    bottom: 24px;
+    padding-left:30px;
+    padding-top: 20px;
 }
 
 .navbar-title h1{
     margin: 1px;
+    bottom: 0px;
+    font-size:33.8;
+    font-family: "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
 }
 
 .navbar-options {
     width: 100%;
-    border: solid 1px #3b3b3b;
     position:absolute;
     bottom:0px;
     left: 0px;
-    height: 30px;
+    height: 26px;
 }
 
 .navbar-menu {
@@ -174,21 +175,22 @@ p {
     margin-left: 120px;
 }
 
-.navbar-links li{
-    font-size: 1em;
+.navbar-links > li > a{
     color: white;
     font-family: Arial;
-    max-height: 35px;
-    border-left: solid 1px #3b3b3b;
-    border-right: solid 1px #3b3b3b;
+    border: solid 1px #3b3b3b;
+    line-height: 12px;
+    font-size: 11.5px;
+    padding-bottom: 6px;
+    padding-top: 6px;
 }
 
 .navbar-inverse .navbar-nav > li > a {
-    color:#FFF;
-    padding-top: 5px;
+    color: #fff;
 }
 
 .navbar-login-options{
-    right: 0px;
     float: right;
+    bottom: 8px;
+    position: relative;
 }

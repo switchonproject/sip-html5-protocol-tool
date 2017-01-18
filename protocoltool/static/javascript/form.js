@@ -45,6 +45,47 @@ $(document).ready(function(){
         }
     });
 
+    $('#saveAll').on('click', function(){
+        /*
+        Save the generic experiment info in the database
+        */
+
+        // check if all values are valid
+        validShortname = checkValidField($('#id_basic_shortTitle'));
+        validTitle = checkValidField($('#id_basic_title'));
+
+        if(validShortname === true && validTitle === true){
+
+            var dataToSend = {
+                    shortTitle: $('#id_basic_shortTitle').val(),
+                    title: $('#id_basic_title').val(),
+                    experimentIdea: $('#id_basic_experimentIdea').val(),
+                    hypothesis: $('#id_basic_hypothesis').val(),
+                    researchObjective: $('#id_basic_researchObjective').val(),
+                    datasetID: datasetID,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken}
+
+            $.ajax({
+                url: "/project/saveexperimentinfo/",
+                type: "POST",
+                data: dataToSend,
+
+                // handle a successful response
+                success : function(json) {
+                    existingExperimentInfo = JSON.parse(json['existingExperimentInfoJSON']);
+                    refreshExperimentInfo();
+                },
+                // handle a non-successful response
+                error : function(xhr,errmsg,err) {
+                    console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                }
+            });
+
+        }
+        else{
+            warningPopup("One or more required fields are filled in incorrectly");
+        }
+    });
 
     $('#saveInfoID').on('click', function(){
         /*
