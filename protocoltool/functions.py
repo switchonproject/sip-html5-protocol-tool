@@ -52,7 +52,6 @@ def getProtocolInfoInJSON(datasetID):
     reportingsList = getListSteps(datasetID, Reporting)
 
     context = {}
-
     context.update({
         'edit': True,
         'datasetID': datasetID,

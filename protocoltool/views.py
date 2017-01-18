@@ -488,13 +488,28 @@ def viewProtocol(request, datasetID):
     '''
 
     try:
+        # check if an action button has been pressed
+        if request.method == 'POST':
+            postDict = request.POST.dict()
+            if 'datasetAction' in postDict.keys():
+                return protocolOverviewAction(request)
+
+        # Get general info + info to display
+        basicInfo = BasicDataset.objects.get(id=datasetID)
         context = functions.getProtocolInfoInJSON(datasetID)
 
+        # Get users with edit rights
+        idList = []
+        for editUser in basicInfo.editUsers.all():
+            idList.append(editUser.user.id)
+
         # get the short title as a separate attribute for easy templating in the html
-        basicInfo = BasicDataset.objects.get(id=datasetID)
         context['shortTitle'] = basicInfo.shortTitle
         context['partners'] = Partner.objects.filter(dataset_id=datasetID)
-        context['leadUser'] = basicInfo.leadUser
+        context['leadUserId'] = basicInfo.leadUser.user.id
+        context['editUserIds'] = idList
+        context['currentUserId'] = request.user.id;
+
     except:
         return HttpResponse('<h2>The protocol with ID ' + str(datasetID) + " cannot be found</h2>")
 

@@ -354,13 +354,16 @@
     }
 
     function deleteProtocol(instance){
-        $('#datasetActionID').val("deleteProtocol");
-        $('#datasetID').val(instance.value);
-        $('#dataset_action_form').submit();
+        bootbox.confirm('The protocol will be deleted. Are you sure you wish to continue?', function(result){
+            if(result){
+                $('#datasetActionID').val("deleteProtocol");
+                $('#datasetID').val(instance.value);
+                $('#dataset_action_form').submit();
+            }
+        });
     }
 
     function publishProtocol(instance){
-
         bootbox.confirm('The protocol will be made non-editable. Are you sure you wish to continue?', function(result){
             if(result){
                 $('#datasetActionID').val("publish");

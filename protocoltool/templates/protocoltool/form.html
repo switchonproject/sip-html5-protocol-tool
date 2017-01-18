@@ -83,16 +83,15 @@
 
         <div class="container">
 
-            <div class="switchon-header">
-                <span><img src="{% static 'img/sologo_new_cropped.png' %}" alt=""/></span>
-                <h1>Protocol Tool</h1>
+            <div class="row">
+                <button type="button" class="btn btn-primary" name="save" action="/form/{{ datasetID }}/">Save</button>
+                <button type="button" class="btn btn-primary" name="return" action="/form/{{ datasetID }}/">Return</button>
             </div>
 
             <div id="messagetype">
                 <span id="messagefa"></span>
                 <div id="messagetext"></div>
             </div>
-
 
             <script>
                 var email = ('switchon.vwsl@' + 'gmail.com')
@@ -489,12 +488,6 @@
                 {% endfor %}
 
                 <hr>
-                <div class="row">
-                    <div class="col-md-12"> <!--Form back button-->
-                        <button type="button" class="btn-lg btn-primary pull-right" onclick="finish()">Finish</button>
-                    </div>
-                </div>
-
             </form>
 
         </div> <!--END CONTAINER -->
