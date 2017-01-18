@@ -494,12 +494,11 @@ def viewProtocol(request, datasetID):
         basicInfo = BasicDataset.objects.get(id=datasetID)
         context['shortTitle'] = basicInfo.shortTitle
         context['partners'] = Partner.objects.filter(dataset_id=datasetID)
+        context['leadUser'] = basicInfo.leadUser
     except:
         return HttpResponse('<h2>The protocol with ID ' + str(datasetID) + " cannot be found</h2>")
 
-
     return render(request, 'protocoltool/viewprotocol.html', context)
-
 
 # @login_required
 def formAll(request, datasetID="0"):
