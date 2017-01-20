@@ -20,15 +20,14 @@ class BasicDataset(models.Model):
         return self.title
 
     title = models.CharField(max_length=200)
-    shortTitle = models.CharField(max_length=100)    # a short name for the title
-    experimentIdea = models.TextField(blank=True)
-    hypothesis = models.TextField(blank=True)
-    researchObjective = models.TextField(blank=True)
-
+    shortTitle = models.CharField(max_length=60)    # a short name for the title
+    experimentIdea = models.TextField(blank=True, max_length=130)
+    hypothesis = models.TextField(blank=True, max_length=600)
+    researchObjective = models.TextField(blank=True, max_length=1200)
     dateLastUpdate = models.DateField(blank=True, default=datetime.date.today)
     hidden = models.BooleanField(default=True)
     published = models.BooleanField(default=False)
-
+    # Foreing Keys
     leadUser = models.ForeignKey(UserProfile, related_name="lead_user", null=True)
     editUsers = models.ManyToManyField(UserProfile, related_name="edit_users")
 
@@ -41,8 +40,8 @@ class Partner(models.Model):
     email = models.EmailField(max_length=100)
     organisation = models.CharField(max_length=100)
     lead = models.BooleanField(default=False)
+    # Foreing Keys
     dataset = models.ForeignKey(BasicDataset)
-
 
 class DataReq(models.Model):
     task = models.TextField(blank=True)
@@ -52,8 +51,8 @@ class DataReq(models.Model):
     partner = models.ForeignKey(Partner)
     deadline = models.DateField(blank=True, default=datetime.date.today)
     done = models.BooleanField(default=False)
+    # Foreing Keys
     dataset = models.ForeignKey(BasicDataset)
-
 
 class ExpStep(models.Model):
     task = models.TextField(blank=True)
@@ -63,19 +62,19 @@ class ExpStep(models.Model):
     partner = models.ForeignKey(Partner)
     deadline = models.DateField(blank=True, default=datetime.date.today)
     done = models.BooleanField(default=False)
+    # Foreing Keys
     dataset = models.ForeignKey(BasicDataset)
-
 
 class Reporting(models.Model):
     task = models.TextField(blank=True)
     taskNr = models.IntegerField(default=1)
-    properties = models.TextField(blank=True)
-    links = models.TextField(blank=True, editable=False)
-    partner = models.ForeignKey(Partner)
     deadline = models.DateField(blank=True, default=datetime.date.today)
     done = models.BooleanField(default=False)
+    properties = models.TextField(blank=True)
+    links = models.TextField(blank=True, editable=False)
+    # Foreing Keys
+    partner = models.ForeignKey(Partner)
     dataset = models.ForeignKey(BasicDataset)
-
 
 class ExternalProtocol(models.Model):
     shortTitle = models.CharField(max_length=200)

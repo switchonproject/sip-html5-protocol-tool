@@ -81,9 +81,10 @@ $(document).ready(function(){
                 }
             });
 
+            window.location.assign('/view/' + datasetID);
         }
         else{
-            warningPopup("One or more required fields are filled in incorrectly");
+            warningPopup("You need to provide at least a full name and short title in order to save a protocol");
         }
     });
 
@@ -122,10 +123,9 @@ $(document).ready(function(){
                     console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
                 }
             });
-
         }
         else{
-            warningPopup("One or more required fields are filled in incorrectly");
+            warningPopup("You need to provide at least a full name and short title in order to save a protocol");
         }
     });
 

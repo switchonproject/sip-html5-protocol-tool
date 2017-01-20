@@ -24,6 +24,9 @@
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
+            <!--CSS/Font awesome-->
+            <script src="https://use.fontawesome.com/00ffb5e1da.js"></script>
+
             {% load staticfiles %}
             <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
             <link rel="stylesheet" type="text/css" href="{% static 'css/viewprotocol.css' %}" />
@@ -86,18 +89,26 @@
                             </form>
                             {% endif %}
                         </div>
+                        <div class="navbar-extras">
+                            <a href="http://www.switch-on-vwsl.eu/about"><i class="fa fa-question-circle fa-so-font" aria-hidden="true"></i></a>
+                            <a href="http://www.switch-on-vwsl.eu/"><i class="fa fa-home fa-so-font" aria-hidden="true"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <!-- END TOOLBAR -->
 
+        <div class="switchon-header">
+            <h1>Protocol: {{ shortTitle }}</h1>
+        </div>
+
         <div class="container">
             <div class="row">
                 {% if user.is_authenticated %}
                     {% if currentUserId == leadUserId %}
                         <button type="button" class="btn btn-primary" name="edit" onclick="window.location.assign('/form/{{ datasetID }}/')">Edit</button>
-                        <button type="button" class="btn btn-primary" value="{{ datasetID }}" name="publish" onclick="publishProtocol(this)">Send to 'review or repeat'</button>
+                        <button type="button" class="btn btn-primary" value="{{ datasetID }}" name="publish" onclick="publishProtocol(this)">Send to review</button>
                         <button type="button" class="btn btn-primary" value="{{ datasetID }}" name="useradmin" onclick="window.location.assign('/useradmin/{{ datasetID }}/')">Set user rights</button>
                         <button type="button" class="btn btn-primary" value="{{ datasetID }}" name="deleteProtocol" onclick="deleteProtocol(this)">Delete</button>
 
@@ -118,10 +129,6 @@
                         setMessage("alert alert-success", "fa fa-4x fa-fw fa-pull-left fa-info-circle", message);
                     </script>
                 {% endif %}
-            </div>
-
-            <div class="switchon-header">
-                <h1>Protocol: {{ shortTitle }}</h1>
             </div>
 
             <hr>

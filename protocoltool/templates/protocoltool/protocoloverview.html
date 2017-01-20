@@ -20,6 +20,7 @@
     </head>
 
     <body>
+
         <!-- TOOLBAR -->
         <div class="navbar navbar-inverse navbar-static-top switchon-navbar">
             <div class="container-fluid">
@@ -37,9 +38,9 @@
                     <div class="navbar-options">
                         <div class="navbar-menu">
                             <ul class="nav navbar-nav navbar-links">
-                                <li><a href="http://www.switch-on-vwsl.eu/define-a-new-experiment/">Create</a></li>
                                 <li><a href="/participate">Participate</a></li>
                                 <li><a href="/review">Review</a></li>
+                                <li><a href="/createprotocol">Add new protocol</a></li>
                             </ul>
                         </div>
                         <div class="navbar-login-options">
@@ -71,6 +72,10 @@
                                 </button>
                             </form>
                             {% endif %}
+                        </div>
+                        <div class="navbar-extras">
+                            <a href="http://www.switch-on-vwsl.eu/about"><i class="fa fa-question-circle fa-so-font" aria-hidden="true"></i></a>
+                            <a href="http://www.switch-on-vwsl.eu/"><i class="fa fa-home fa-so-font" aria-hidden="true"></i></a>
                         </div>
                     </div>
                 </div>
@@ -135,17 +140,6 @@
 
 
                 <div class="panel-body">
-
-                    {% if showParticipate %}
-
-                        <form class="form-inline pull-left" action="../../admin/">
-                            <button type="submit" title="Manage user accounts if you have administrator rights" class="btn btn-default btn-sm">
-                                <i class="fa fa-user"></i>&nbsp&nbspAdmin
-                            </button>
-                        </form>
-
-                    {% endif %}
-
                     <div class="row"></div>
 
                     <div class="row"> <!--Datasets table-->
@@ -157,8 +151,10 @@
                             <table id="participatetable" class="table table-striped">
                                 <thead>
                                     <tr>
+                                        <th class="col-md-1"></th>
                                         <th class="col-md-4">Protocol</th>
-                                        <th class="col-md-2">Last update</th>
+                                        <th class="col-md-8">Experiment idea</th>
+                                        <th class="col-md-3">Last update</th>
                                         <th class="col-md-2">Status</th>
                                         <th class="col-md-4">Actions</th>
                                     </tr>
@@ -168,8 +164,10 @@
                                         {% if dataset.hidden == False %}
                                             {% if not dataset.published  %}
                                             <tr>
+                                                <td class="col-md-1"><img class="switchon-navbar-logo" src="/static/img/sologo_50x50.png" alt=""></td>
                                                 <td class="col-md-4">{{ dataset.shortTitle }}</td>
-                                                <td class="col-md-2">{{ dataset.dateLastUpdate | date:'d-m-Y' }}</td>
+                                                <td class="col-md-8">{{ dataset.experimentIdea }}</td>
+                                                <td class="col-md-3">{{ dataset.dateLastUpdate | date:'d-m-Y' }}</td>
                                                 <td class="col-md-2">Participate</td>
                                                 <td class="col-md-4">
                                                     <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="view" onclick="viewProtocol(this)">View</button>
@@ -178,7 +176,7 @@
 
                                                         {% if user.id == dataset.leadUser.user.id %}
                                                             <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="edit" onclick="editProtocol(this)">Edit</button>
-                                                            <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="publish" onclick="publishProtocol(this)">Send to 'review or repeat'</button>
+                                                            <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="publish" onclick="publishProtocol(this)">Send to review</button>
                                                             <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="useradmin" onclick="userAdmin(this)">Set user rights</button>
                                                             <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="deleteProtocol" onclick="deleteProtocol(this)">Delete</button>
 
@@ -212,8 +210,10 @@
                             <table id="reviewtable" class="table table-striped">
                                 <thead>
                                     <tr>
+                                        <th class="col-md-1"></th>
                                         <th class="col-md-4">Protocol</th>
-                                        <th class="col-md-2">Date completed</th>
+                                        <th class="col-md-8">Experiment Idea</th>
+                                        <th class="col-md-3">Date completed</th>
                                         <th class="col-md-2">Status</th>
                                         <th class="col-md-4">Actions</th>
                                     </tr>
@@ -224,8 +224,10 @@
 
                                             {% if dataset.published %}
                                             <tr>
+                                                <td class="col-md-1"><img class="switchon-navbar-logo" src="/static/img/sologo_50x50.png" alt=""></td>
                                                 <td class="col-md-4">{{ dataset.shortTitle }}</td>
-                                                <td class="col-md-2">{{ dataset.dateLastUpdate | date:'d-m-Y' }}</td>
+                                                <td class="col-md-8">{{ dataset.experimentIdea }}</td>
+                                                <td class="col-md-3">{{ dataset.dateLastUpdate | date:'d-m-Y' }}</td>
                                                 <td class="col-md-2">
                                                     Review or repeat
                                                 </td>
@@ -247,8 +249,10 @@
                                     {% for externalProtocol in externalProtocolList  %}
 
                                     <tr>
+                                        <td class="col-md-1"><img class="switchon-navbar-logo" src="/static/img/sologo_50x50.png" alt=""></td>
                                         <td class="col-md-4">{{ externalProtocol.shortTitle }}</td>
-                                        <td class="col-md-2">{{ externalProtocol.dateLastUpdate | date:'d-m-Y' }}</td>
+                                        <td class="col-md-8">{{ externalProtocol.experimentIdea }}</td>
+                                        <td class="col-md-3">{{ externalProtocol.dateLastUpdate | date:'d-m-Y' }}</td>
                                         <td class="col-md-2">
                                             Review or repeat
                                         </td>
@@ -273,8 +277,14 @@
                 <div class="panel-footer clearfix">
 
                     <form class="form-inline pull-left" action="mailto:switchon.vwsl@gmail.com">
-                        <button type="submit" title="Send feedback on the tool" class="btn btn-primary pull-left">
+                        <button type="submit" title="Send feedback on the tool" class="btn btn-default pull-left btn-space">
                                 <i class="glyphicon glyphicon-envelope"></i>&nbsp&nbspFeedback
+                        </button>
+                    </form>
+
+                    <form class="form-inline pull-left" action="../../admin/">
+                        <button type="submit" title="Manage user accounts if you have administrator rights" class="btn btn-default pull-left btn-space">
+                            <i class="fa fa-user"></i>&nbsp&nbspAdmin
                         </button>
                     </form>
 
