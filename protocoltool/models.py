@@ -31,6 +31,15 @@ class BasicDataset(models.Model):
     leadUser = models.ForeignKey(UserProfile, related_name="lead_user", null=True)
     editUsers = models.ManyToManyField(UserProfile, related_name="edit_users")
 
+class Publication(models.Model):
+    def __unicode__(self):
+        return self.name
+
+    name = models.CharField(max_length=100)
+    type = models.CharField(max_length=100)
+
+    # Foreing Keys
+    dataset = models.ForeignKey(BasicDataset)
 
 class Partner(models.Model):
     def __unicode__(self):

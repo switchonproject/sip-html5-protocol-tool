@@ -1,6 +1,6 @@
 __author__ = 'beekhuiz'
-from .forms import BasicDatasetForm, PartnerForm, DataReqForm, ExpStepForm, ReportingForm, UserForm, UserProfileForm
-from .models import UserProfile, BasicDataset, Partner, DataReq, ExpStep, Reporting
+from .forms import BasicDatasetForm, PartnerForm, PublicationForm, DataReqForm, ExpStepForm, ReportingForm, UserForm, UserProfileForm
+from .models import UserProfile, BasicDataset, Partner, Publication, DataReq, ExpStep, Reporting
 from django.core.mail import send_mail
 import datetime
 import json
@@ -47,6 +47,7 @@ def getProtocolInfoInJSON(datasetID):
     # Load in data
     experimentInfoDict = getExperimentInfoDict(datasetID)
     partnersList = getPartnersList(datasetID)
+    publicationsList = getPublicationsList(datasetID)
     reqsList = getListSteps(datasetID, DataReq)
     expStepsList = getListSteps(datasetID, ExpStep)
     reportingsList = getListSteps(datasetID, Reporting)
@@ -57,6 +58,7 @@ def getProtocolInfoInJSON(datasetID):
         'datasetID': datasetID,
         'experimentInfoJSON': json.dumps(experimentInfoDict),
         'partnersJSON': json.dumps(partnersList),
+        'publicationsJSON': json.dumps(publicationsList),
         'reqsJSON': json.dumps(reqsList),
         'expStepsJSON': json.dumps(expStepsList),
         'reportingsJSON': json.dumps(reportingsList),
@@ -77,13 +79,14 @@ def getAllFormInfo(datasetID):
     formDataReq = DataReqForm(auto_id='id_req_%s')
     formExpStep = ExpStepForm(auto_id='id_exp_%s')
     formReporting = ReportingForm(auto_id='id_reporting_%s')
-
+    formPublication = PublicationForm(auto_id='id_publication_%s')
     formList = [
         ['Basic', formCore],
         ['Partner', formPartner],
         ['DataReq', formDataReq],
         ['ExpStep', formExpStep],
         ['Reporting', formReporting],
+        ['Publication', formPublication],
     ]
 
     return formList
@@ -93,6 +96,31 @@ def updateLastUpdate(datasetID):
     BasicDataset.objects.filter(id=datasetID).update(
         dateLastUpdate=str(datetime.date.today()))
 
+def createPublicationModelFromClient(postDict, update):
+    '''
+    Creates a new data Publication model object using an AJAX call from the client
+    :param postDict: information of the Partner from the client
+    :param update: boolean indicating whether it is an update or an addition
+    :return: none
+    '''
+
+    # get the foreign key of the protocol dataset of this partner
+    dataset = BasicDataset.objects.get(id=postDict['datasetID'])
+
+    if update:
+        Publication.objects.filter(id=postDict['publicationID']).update(
+        name=postDict['name'],
+        type=postDict['type'])
+    else:
+        # create new partner object
+        publicationObj = Publication(
+            dataset = dataset,
+            name=postDict['name'],
+            type=postDict['type']
+        )
+        publicationObj.save()
+
+    updateLastUpdate(postDict['datasetID'])
 
 def createPartnerModelFromClient(postDict, update):
     '''
@@ -149,6 +177,25 @@ def getExperimentInfoDict(datasetID):
     }
     return existingExpertimentInfoDict
 
+def getPublicationsList(datasetID):
+    '''
+    Store all publication information in an array list
+    :param datasetID: id of the dataset for which the publication are retrieved
+    :return: list with all publication
+    '''
+
+    existingPublications = Publication.objects.filter(dataset__id=datasetID)
+
+    existingPublicationsList = []
+    for publication in existingPublications:
+        publicationDict = {
+            "id": publication.id,
+            "name": publication.name,
+            "type": publication.type,
+        }
+        existingPublicationsList.append(publicationDict)
+
+    return existingPublicationsList
 
 def getPartnersList(datasetID):
     '''

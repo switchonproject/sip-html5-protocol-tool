@@ -1,5 +1,5 @@
 __author__ = 'beekhuiz'
-from .models import BasicDataset, Partner, DataReq, ExpStep, Reporting
+from .models import BasicDataset, Partner, Publication, DataReq, ExpStep, Reporting
 from django.http import HttpResponse
 import os
 from io import BytesIO
@@ -58,6 +58,7 @@ def createPDF(datasetID):
     # Get all the information of this protocol
     basicInfo = BasicDataset.objects.get(id=datasetID)
     partnerInfo = Partner.objects.filter(dataset_id=datasetID)
+    publicationInfo = Publication.objects.filter(dataset_id=datasetID)
     reqInfo = DataReq.objects.filter(dataset_id=datasetID).order_by('taskNr')
     stepInfo = ExpStep.objects.filter(dataset_id=datasetID).order_by('taskNr')
     reportingInfo = Reporting.objects.filter(dataset_id=datasetID).order_by('taskNr')
@@ -215,6 +216,24 @@ def createPDF(datasetID):
 
     story.append(Paragraph('C) Result Reporting', styles['title2']))
     writeTasks(story, styles, reportingInfo)
+
+    # Publications
+    story.append(Paragraph('D) Publications', styles['title2']))
+
+    for publication in publicationInfo:
+
+        publicationName = Paragraph('{}'.format(publication.name), styles['default'])
+        publicationType = Paragraph('{}'.format(publication.type), styles['default'])
+
+        data = [[Paragraph('Name:', styles['label']), publicationName],
+           [Paragraph('Type:', styles['label']), Paragraph(publication.type, styles['default'])]]
+
+        t=Table(data, hAlign='LEFT', colWidths=[4 * cm, 12 * cm])
+        t.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP')]))
+        story.append(t)
+        story.append(Spacer(1, 16))
+
+    story.append(Spacer(1, 24))
 
     # write the document to disk
     doc.build(story)

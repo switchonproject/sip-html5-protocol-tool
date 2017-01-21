@@ -29,7 +29,11 @@ urlpatterns = patterns('django.contrib.auth.views',
     url(r'^addpartner/$', views.addPartner, name='add_partner'),
     url(r'^updatepartner/$', views.updatePartner, name='update_partner'),
     url(r'^deletepartner/$', views.deletePartner, name='delete_partner'),
-                       
+
+    url(r'^addpublication/$', views.addPublication, name='add_publication'),
+    url(r'^updatepublication/$', views.updatePublication, name='update_publication'),
+    url(r'^deletepublication/$', views.deletePublication, name='delete_publication'),
+
     url(r'^addreq/$', views.addReq, name='add_req'),
     url(r'^updatereq/$', views.updateReq, name='update_req'),
     url(r'^deletereq/$', views.deleteReq, name='delete_req'),

@@ -162,7 +162,6 @@
                     </div> <!-- end row with the protocol information-->
                     {% endif %}
 
-
                     {% if form.0 == 'Partner' %}
                     <div class="row">
                         <hr>
@@ -490,6 +489,62 @@
                     </div>  <!-- end row with Result reporting information-->
                     {% endif %} <!--end if form is reportingForm-->
 
+                    {% if form.0 == 'Publication' %}
+                    <div class="row">
+                        <hr>
+                        <div class="col-md-6">
+                            <h4>D) Publications</h4>
+                            {% for field in form.1 %}
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">{{ field.label }}:</label>
+                                <div class="col-md-9">
+                                    {{ field }}
+                                    {{ field.errors }}
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                            <div class="col-md-6">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                                      <div class="btn-group" role="group">
+                                        <button type="button" id="addPublicationID" class="btn btn-primary active">
+                                          <i class="fa fa-plus fa-lg"></i>&nbsp&nbspAdd</button>
+                                      </div>
+                                      <div class="btn-group" role="group">
+                                        <button type="button" id="updatePublicationID" class="btn btn-primary disabled">
+                                          <i class="fa fa-repeat fa-lg"></i>&nbsp&nbspUpdate</button>
+                                      </div>
+                                      <div class="btn-group" role="group">
+                                        <button type="button" id="deletePublicationID" class="btn btn-primary disabled">
+                                          <i class="fa fa-trash-o fa-lg"></i>&nbsp&nbspDelete</button>
+                                      </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6">
+                            <input type="hidden" id="selectedPublicationID" value="-99">
+                            <h4>Stored publications:</h4>
+
+                            <table id="publicationTable" class="table table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-8"><strong>Name</strong></th>
+                                        <th class="col-md-3"><strong>Type</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>  <!-- end row with partner information-->
+                    {% endif %} <!--end if form is publication-->
+
                 </div>  <!--End div overall form-->
                 {% endfor %}
 
@@ -514,6 +569,7 @@
 
     var existingExperimentInfo = {{ experimentInfoJSON|safe }};
     var existingPartners = {{ partnersJSON|safe }};
+    var existingPublications = {{ publicationsJSON|safe }};
     var existingReqs = {{ reqsJSON|safe }};
     var existingExpSteps = {{ expStepsJSON|safe }};
     var existingReportings = {{ reportingsJSON|safe }};

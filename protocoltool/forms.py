@@ -1,5 +1,5 @@
 from django import forms
-from .models import BasicDataset, Partner, DataReq, ExpStep, Reporting, UserProfile
+from .models import BasicDataset, Partner, Publication, DataReq, ExpStep, Reporting, UserProfile
 from django.forms.widgets import DateInput, Textarea, TextInput, EmailInput, PasswordInput
 from django.contrib.auth.models import User
 
@@ -76,6 +76,23 @@ class BasicDatasetForm(forms.ModelForm):
             )
         }
 
+
+class PublicationForm(forms.ModelForm):
+    class Meta:
+        model = Publication
+        fields = [
+            'name',
+            'type',
+        ]
+
+        widgets = {
+            'name': TextInput(
+                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus'}
+            ),
+            'type': TextInput(
+                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus'}
+            ),
+        }
 
 class PartnerForm(forms.ModelForm):
     class Meta:

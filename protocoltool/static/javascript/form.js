@@ -1,8 +1,37 @@
 
 $(document).ready(function(){
 
-    // fill in all the partner information
+    // fill in all the publication information
     refreshAll();
+
+    $('#publicationTable').on('click', 'tbody tr', function(){
+
+        selectedPublication = $(this).find(".publicationname").text();
+        $(this).closest("tr").addClass("highlight").siblings().removeClass("highlight");
+
+        var arrayLength = existingPublications.length;
+
+        for (i = 0; i < arrayLength; i++) {
+
+            if(existingPublications[i].name == selectedPublication){
+
+                // set fields to valid
+                $('#id_publication_name').removeClass('error');
+                $('#id_publication_type').removeClass('error');
+
+                $('#id_publication_name').val(existingPublications[i].name);
+                $('#id_publication_type').val(existingPublications[i].type);
+
+                $('#selectedPublicationID').val(existingPublications[i].id);
+
+                // update buttons
+                $('#updatePublicationID').removeClass( "disabled" ).addClass( "active" );
+                $('#updatePublicationID').prop( "disabled", false);
+                $('#deletePublicationID').removeClass( "disabled" ).addClass( "active" );
+                $('#deletePublicationID').prop( "disabled", false);
+            }
+        }
+    });
 
     $('#partnerTable').on('click', 'tbody tr', function(){
 
@@ -129,6 +158,61 @@ $(document).ready(function(){
         }
     });
 
+
+    // PUBLICATIONS
+
+    $('#addPublicationID').on('click', function(){
+
+        removePublicationErrorClasses();
+
+        // check if all values are valid
+        validName = checkValidField($('#id_publication_name'));
+        validType = checkValidField($('#id_publication_type'));
+
+        if(validName === true && validType === true){
+            sendPublicationInfoToServer(false);
+        }
+        else {
+            warningPopup("One or more fields are filled in incorrectly");
+        }
+    });
+
+    $('#updatePublicationID').on('click', function(){
+        // check if all values are valid
+        validName = checkValidField($('#id_publication_name'));
+        validType = checkValidField($('#id_publication_type'));
+
+        if(validName === true && validType === true){
+            sendPublicationInfoToServer(true);
+        }
+        else{
+            warningPopup("One or more fields are filled in incorrectly");
+        }
+    });
+
+    $('#deletePublicationID').on('click', function(){
+
+        var publicationID = $('#selectedPublicationID').val();
+        $.ajax({
+            url: "/project/deletepublication/",
+            type: "POST",
+            data: {publicationID: publicationID,
+                   datasetID: datasetID,
+                   csrfmiddlewaretoken: csrfmiddlewaretoken},
+
+            // handle a successful response
+            success : function(json) {
+                existingPublications = JSON.parse(json['existingPublicationsJSON']);
+                refreshPublications();
+            },
+            // handle a non-successful response
+            error : function(xhr,errmsg,err) {
+                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            }
+        });
+    });
+
+    // PARTNERS
 
     $('#addPartnerID').on('click', function(){
 

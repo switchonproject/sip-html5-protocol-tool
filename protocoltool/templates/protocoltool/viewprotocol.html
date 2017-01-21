@@ -151,21 +151,6 @@
             <hr>
             <h4> Partners </h4>
 
-            <!--Better code, somehow does not work yet  as it duplicates all partners..-->
-            <!--<div class="row">-->
-                <!--<div class="col-md-10">-->
-                    <!--<table id="partnerTableView" table-border="0">-->
-                        <!--<th class="col-md-3 infotext"><strong>Name</strong></th>-->
-                        <!--<th class="col-md-3 infotext"><strong>E-mail</strong></th>-->
-                        <!--<th class="col-md-3 infotext"><strong>Organisation</strong></th>-->
-                        <!--<th class="col-md-1 infotext"><strong></strong></th>-->
-                        <!--<tbody>-->
-                        <!--</tbody>-->
-                    <!--</table>-->
-
-                <!--</div>-->
-            <!--</div>-->
-
             <div class="row">
                 <div class="col-md-10">
                     <table id="partnerTable" table-border="0">
@@ -184,8 +169,6 @@
                     </table>
                 </div>
             </div>
-
-
 
             <hr>
             <h4> A) Data & Method Preparation </h4>
@@ -211,8 +194,28 @@
                 </tbody>
             </table>
 
-            <script>
 
+            <hr>
+            <h4> D) Publications </h4>
+
+            <div class="row">
+                <div class="col-md-10">
+                    <table id="publicationTable" table-border="0">
+                        <th class="col-md-8 infotext"><strong>Name</strong></th>
+                        <th class="col-md-3 infotext"><strong>Type</strong></th>
+                        <tbody>
+                         {% for publication in publications %}
+                            <tr>
+                                <td class="col-md-8 infotext">{{ publication.name }}</td>
+                                <td class="col-md-3 infotext">{{ publication.type }}</td>
+                            </tr>
+                         {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <script>
                 //writePartnersViewProtocol(partners);
                 writeStepsViewProtocol(reqs, "methodTable");
                 writeStepsViewProtocol(expSteps, "stepTable");

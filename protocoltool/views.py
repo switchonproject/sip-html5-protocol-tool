@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
 from django.shortcuts import render
 from .forms import UserForm, UserProfileForm
-from .models import UserProfile, BasicDataset, Partner, DataReq, ExpStep, Reporting, ExternalProtocol
+from .models import UserProfile, BasicDataset, Partner, Publication, DataReq, ExpStep, Reporting, ExternalProtocol
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.messages import error
 import json
@@ -506,6 +506,7 @@ def viewProtocol(request, datasetID):
         # get the short title as a separate attribute for easy templating in the html
         context['shortTitle'] = basicInfo.shortTitle
         context['partners'] = Partner.objects.filter(dataset_id=datasetID)
+        context['publications'] = Publication.objects.filter(dataset_id=datasetID)
         context['leadUserId'] = basicInfo.leadUser.user.id
         context['editUserIds'] = idList
         context['currentUserId'] = request.user.id;
@@ -610,6 +611,45 @@ def deletePartner(request):
     # send back the new Request model as a list to use client side
     existingPartnersList = functions.getPartnersList(postDict['datasetID'])
     return JsonResponse({'existingPartnersJSON': json.dumps(existingPartnersList)})
+
+# endregion
+
+# region PUBLICATIONS
+"""
+PUBLICATIONS
+"""
+
+
+def addPublication(request):
+    postDict = request.POST.dict()
+
+    # update the Publication model based on the post information from the client
+    functions.createPublicationModelFromClient(postDict, False)
+
+    # send back the new Publication model as a list to use client side
+    existingPublicationsList = functions.getPublicationsList(postDict['datasetID'])
+    return JsonResponse({'existingPublicationsJSON': json.dumps(existingPublicationsList)})
+
+
+def updatePublication(request):
+    postDict = request.POST.dict()
+
+    # update the Publication model based on the post information from the client
+    functions.createPublicationModelFromClient(postDict, True)
+
+    # send back the new Partner model as a list to use client side
+    existingPublicationsList = functions.getPublicationsList(postDict['datasetID'])
+    return JsonResponse({'existingPublicationsJSON': json.dumps(existingPublicationsList)})
+
+
+def deletePublication(request):
+    postDict = request.POST.dict()
+
+    Publication.objects.filter(id=postDict['publicationID']).delete()
+
+    # send back the new Request model as a list to use client side
+    existingPublicationsList = functions.getPublicationsList(postDict['datasetID'])
+    return JsonResponse({'existingPublicationsJSON': json.dumps(existingPublicationsList)})
 
 # endregion
 

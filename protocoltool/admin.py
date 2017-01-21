@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import BasicDataset, Partner, DataReq, ExpStep, Reporting, ExternalProtocol, UserProfile
+from .models import BasicDataset, Partner, Publication, DataReq, ExpStep, Reporting, ExternalProtocol, UserProfile
 
 # Register your models here.
 class UserProfileAdmin(admin.ModelAdmin):
@@ -12,6 +12,9 @@ class BasicDatasetAdmin(admin.ModelAdmin):
             'leadUser',
             'published',
             'hidden')
+
+class PublicationAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'type')
 
 class PartnerAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'email', 'organisation', 'lead')
@@ -31,6 +34,7 @@ class ExternalProtocolAdmin(admin.ModelAdmin):
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(BasicDataset, BasicDatasetAdmin)
 admin.site.register(Partner, PartnerAdmin)
+admin.site.register(Publication, PublicationAdmin)
 admin.site.register(DataReq, DataReqAdmin)
 admin.site.register(ExpStep, ExpStepAdmin)
 admin.site.register(Reporting, ReportingAdmin)

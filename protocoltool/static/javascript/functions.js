@@ -24,6 +24,10 @@ function removePartnerErrorClasses() {
     $('#id_partner_organisation').removeClass('error');
 }
 
+function removePublicationErrorClasses() {
+    $('#id_publication_name').removeClass('error');
+    $('#id_publication_type').removeClass('error');
+}
 
 function writeStepsViewProtocol(steps, table) {
 
@@ -39,7 +43,7 @@ function writeStepsViewProtocol(steps, table) {
         else {
             doneText += " (In progress):";
         }
-        console.log((steps[i].links));
+
         writeLabelLine("#" + table + " > tbody", doneText, steps[i].task);
         writeLabelLine("#" + table + " > tbody", "Description:", steps[i].properties);
         if (steps[i].links !== "") { writeLabelLine("#" + table + " > tbody", "Links:", steps[i].links); }
@@ -218,6 +222,7 @@ function refreshAll(){
     */
     refreshExperimentInfo();
     refreshPartners();
+    refreshPublications();
     refreshReqs(existingReqs);
     refreshExpSteps(existingExpSteps);
     refreshReporting(existingReportings);
@@ -235,8 +240,7 @@ function refreshExperimentInfo(){
     writeLabelTwoLines("#experimentTable > tbody", "Objective:", existingExperimentInfo.researchObjective);
 }
 
-function refreshPartners(){
-
+function refreshPartners() {
     // Reset all Partner stuff
     $('#id_partner_name').val("");
     $('#id_partner_email').val("");
@@ -289,6 +293,30 @@ function refreshPartners(){
         $("#partnerReporting").append('<option value = ' + existingPartners[i].id + '>' + existingPartners[i].name + '</option>');
     }
     $("#partnerReporting").val(selectedPartnerID)
+}
+
+function refreshPublications(){
+    // Reset all Publication stuff
+    $('#id_publication_name').val("");
+    $('#id_publication_type').val("");
+
+    // update buttons
+    $('#updatePublicationID').removeClass( "active" ).addClass( "disabled" );
+    $('#updatePublicationID').prop( "disabled", true);
+    $('#deletePublicationID').removeClass( "active" ).addClass( "disabled" );
+    $('#deletePublicationID').prop( "disabled", true);
+
+    // reset selected publication ID
+    $('#selectedPublicationID').val('-99')
+
+    // reset publication table
+    var arrayLength = existingPublications.length;
+    $("#publicationTable tbody tr").remove();
+
+    for (i = 0; i < arrayLength; i++) {
+        $("#publicationTable > tbody").append('<tr class="publicationRow"><td class="col-md-8 publicationname">' + existingPublications[i].name +
+        '<td class="col-md-3">' + existingPublications[i].type + '</td>' + '</tr>');
+    }
 }
 
 
@@ -535,6 +563,46 @@ function getPartnerByID(partnerID){
     return null;
 }
 
+
+function sendPublicationInfoToServer(update){
+
+    url = "/project/addpublication/"
+
+    dataToSend = {
+       datasetID: datasetID,
+       name: $('#id_publication_name').val(),
+       type: $('#id_publication_type').val(),
+       csrfmiddlewaretoken: csrfmiddlewaretoken
+    }
+
+    if (update == true){
+        url = "/project/updatepublication/"
+        publicationID = $('#selectedPublicationID').val();
+        dataToSend['publicationID'] = publicationID;
+    }
+
+    $('#selectedPublicationID').val(-1) // deselect the publication after storing the form data
+
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: dataToSend,
+
+        // handle a successful response
+        success : function(json) {
+            existingPublications = JSON.parse(json['existingPublicationsJSON']);
+            refreshPublications();
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        }
+    });
+
+} // end sendPublicationInfoToServer
+
+
 function sendPartnerInfoToServer(update){
 
     url = "/project/addpartner/"
@@ -571,7 +639,8 @@ function sendPartnerInfoToServer(update){
         }
     }
 
-    dataToSend = {datasetID: datasetID,
+    dataToSend = {
+       datasetID: datasetID,
        name: $('#id_partner_name').val(),
        email: $('#id_partner_email').val(),
        organisation: $('#id_partner_organisation').val(),
