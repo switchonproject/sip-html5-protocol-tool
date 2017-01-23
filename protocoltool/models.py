@@ -20,10 +20,10 @@ class BasicDataset(models.Model):
         return self.title
 
     title = models.CharField(max_length=200)
-    shortTitle = models.CharField(max_length=60)    # a short name for the title
-    experimentIdea = models.TextField(blank=True, max_length=130)
+    shortTitle = models.CharField(max_length=60)  # a short name for the title
+    experimentIdea = models.TextField(blank=True, max_length=1200)
     hypothesis = models.TextField(blank=True, max_length=600)
-    researchObjective = models.TextField(blank=True, max_length=1200)
+    researchObjective = models.TextField(blank=True, max_length=130)
     dateLastUpdate = models.DateField(blank=True, default=datetime.date.today)
     hidden = models.BooleanField(default=True)
     published = models.BooleanField(default=False)
