@@ -225,8 +225,8 @@ def createPDF(datasetID):
         publicationName = Paragraph('{}'.format(publication.name), styles['default'])
         publicationType = Paragraph('{}'.format(publication.type), styles['default'])
 
-        data = [[Paragraph('Name:', styles['label']), publicationName],
-           [Paragraph('Type:', styles['label']), Paragraph(publication.type, styles['default'])]]
+        data = [[Paragraph('Paper Title:', styles['label']), publicationName],
+           [Paragraph('DOI:', styles['label']), Paragraph(publication.type, styles['default'])]]
 
         t=Table(data, hAlign='LEFT', colWidths=[4 * cm, 12 * cm])
         t.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP')]))

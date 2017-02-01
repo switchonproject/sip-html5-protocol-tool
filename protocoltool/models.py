@@ -35,8 +35,8 @@ class Publication(models.Model):
     def __unicode__(self):
         return self.name
 
-    name = models.CharField(max_length=100)
-    type = models.CharField(max_length=100)
+    name = models.CharField(max_length=250) # Paper title
+    type = models.CharField(max_length=250) # DOI
 
     # Foreing Keys
     dataset = models.ForeignKey(BasicDataset)

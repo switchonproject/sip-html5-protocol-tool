@@ -277,12 +277,14 @@
                 <div class="panel-footer clearfix">
 
                     <form class="form-inline pull-left" action="mailto:switchon.vwsl@gmail.com">
+                        {% csrf_token %}
                         <button type="submit" title="Send feedback on the tool" class="btn btn-default pull-left btn-space">
                                 <i class="glyphicon glyphicon-envelope"></i>&nbsp&nbspFeedback
                         </button>
                     </form>
 
                     <form class="form-inline pull-left" action="../../admin/">
+                        {% csrf_token %}
                         <button type="submit" title="Manage user accounts if you have administrator rights" class="btn btn-default pull-left btn-space">
                             <i class="fa fa-user"></i>&nbsp&nbspAdmin
                         </button>

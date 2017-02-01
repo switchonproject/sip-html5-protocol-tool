@@ -84,13 +84,16 @@ class PublicationForm(forms.ModelForm):
             'name',
             'type',
         ]
-
+        labels = {
+            'name': 'Paper Title',
+            'type': 'DOI',
+        }
         widgets = {
             'name': TextInput(
-                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus'}
+                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus', 'placeholder': 'the title of the published paper'}
             ),
             'type': TextInput(
-                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus'}
+                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus', 'placeholder': 'the DOI or link to published paper'}
             ),
         }
 

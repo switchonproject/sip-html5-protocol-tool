@@ -314,8 +314,7 @@ function refreshPublications(){
     $("#publicationTable tbody tr").remove();
 
     for (i = 0; i < arrayLength; i++) {
-        $("#publicationTable > tbody").append('<tr class="publicationRow"><td class="col-md-8 publicationname">' + existingPublications[i].name +
-        '<td class="col-md-3">' + existingPublications[i].type + '</td>' + '</tr>');
+        $("#publicationTable > tbody").append('<tr class="publicationRow"><td class="col-md-8 publicationname">' + existingPublications[i].name + '</td>' + '</tr>');
     }
 }
 

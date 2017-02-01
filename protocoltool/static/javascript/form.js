@@ -18,7 +18,6 @@ $(document).ready(function(){
                 // set fields to valid
                 $('#id_publication_name').removeClass('error');
                 $('#id_publication_type').removeClass('error');
-
                 $('#id_publication_name').val(existingPublications[i].name);
                 $('#id_publication_type').val(existingPublications[i].type);
 
