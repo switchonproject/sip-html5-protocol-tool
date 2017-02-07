@@ -37,49 +37,63 @@
                         </div>
                     </div>
                     <div class="navbar-options">
-                        <div class="navbar-menu">
-                            <ul class="nav navbar-nav navbar-links">
-                                <li><a href="/participate">Participate</a></li>
-                                <li><a href="/review">Review</a></li>
-                                <li><a href="/createprotocol">Add new protocol</a></li>
-                            </ul>
-                        </div>
-                        <div class="navbar-login-options">
-                            {% if user.is_authenticated %}
-                            <form class="form-inline pull-right" role="form" method="post" action="/project/logout/">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-warning btn-sm">
-                                    <i class="fa fa-sign-out"></i>&nbsp&nbspLog Out
-                                </button>
-
-                            </form>
-                            {% else %}
-
-                            <button type="button" class="btn btn-primary btn-sm pull-right" id="registerbuttonid"
-                                    onclick="window.location.assign('/project/register/')">
-                                    <i class="fa fa-user-plus"></i>&nbsp&nbspRegister
-                            </button>
-
-                            <form class="form-inline pull-right" role="form" autocomplete="off" method="post" action="/project/login/">
-                                {% csrf_token %}
-                                <div class="form-group form-group-sm">
-                                    <input type="text" class="form-control" placeholder="username" value="" name="username" size="15">
-                                </div>
-                                <div class="form-group form-group-sm">
-                                    <input type="password" class="form-control" value="" placeholder="password" name="password" size="15">
-                                </div>
-                                <button type="submit" class="btn btn-success btn-sm">
-                                    <i class="fa fa-sign-in"></i>&nbsp&nbspLog In
-                                </button>
-                            </form>
-                            {% endif %}
-                        </div>
                         <div class="navbar-extras">
                             <a href="http://www.switch-on-vwsl.eu/about"><i class="fa fa-question-circle fa-so-font" aria-hidden="true"></i></a>
+                            <a href="http://www.switch-on-vwsl.eu/about-2"><i class="fa fa-info-circle fa-so-font" aria-hidden="true"></i></a>
                             <a href="http://www.switch-on-vwsl.eu/"><i class="fa fa-home fa-so-font" aria-hidden="true"></i></a>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="navbar navbar-static-top switchon-navbar-secondary">
+            <div class="container-fluid container-secondbar">
+                    <div>
+                        <div class="navbar-menu">
+                            <ul class="nav navbar-nav navbar-links">
+                                <button type="button" class="btn btn-primary btn-sm pull-center switchon-navbar-button" id="createbutton"
+                                    onclick="window.location.assign('/createprotocol')">
+                                    <i class="fa li-navbar-button"></i>Create
+                                </button>
+                                <button type="button" class="btn btn-primary btn-sm pull-center switchon-navbar-button" id="participatebutton"
+                                    onclick="window.location.assign('/participate')">
+                                    <i class="fa li-navbar-button"></i>Participate
+                                </button>
+                                <button type="button" class="btn btn-primary btn-sm pull-center switchon-navbar-button" id="reviewbutton"
+                                    onclick="window.location.assign('/review')">
+                                    <i class="fa li-navbar-button"></i>Review
+                                </button>
+                            </ul>
+                        </div>
+
+                        {% if user.is_authenticated %}
+                        <form class="form-inline pull-right" role="form" method="post" action="/project/logout/">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-warning btn-sm height-bar-overr">
+                                <i class="fa fa-sign-out"></i>&nbsp&nbspLog Out
+                            </button>
+                        </form>
+                        {% else %}
+
+                        <button type="button" class="btn btn-primary btn-sm pull-right height-bar-overr" id="registerbuttonid"
+                                onclick="window.location.assign('/project/register/')">
+                                <i class="fa fa-user-plus"></i>&nbsp&nbspRegister
+                        </button>
+
+                        <form class="form-inline pull-right" role="form" autocomplete="off" method="post" action="/project/login/">
+                            {% csrf_token %}
+                            <div class="form-group form-group-sm height-bar-overr">
+                                <input type="text" class="textboxeslogin" placeholder="username" value="" name="username" size="15">
+                            </div>
+                            <div class="form-group form-group-sm height-bar-overr">
+                                <input type="password" class="textboxeslogin" value="" placeholder="password" name="password" size="15">
+                            </div>
+                            <button type="submit" class="btn btn-success btn-sm height-bar-overr">
+                                <i class="fa fa-sign-in"></i>&nbsp&nbspLog In
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
             </div>
         </div>
         <!-- END TOOLBAR -->

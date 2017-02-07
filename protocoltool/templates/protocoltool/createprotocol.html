@@ -71,23 +71,46 @@
         <div class="navbar navbar-inverse navbar-static-top switchon-navbar">
             <div class="container-fluid">
                 <div>
-                    <div class="navbar-header">
+                    <div class="nav navbar-header">
                         <a class="navbar-brand switchon-navbar-container" href="http://www.switch-on-vwsl.eu/">
                             <img class="switchon-navbar-logo" src="{% static 'img/sologo_150x150.png' %}" alt=""/>
                         </a>
                     </div>
                     <div class="nav navbar-nav">
-                        <div class=>
-                            <div class="navbar-title">
-                                <h1>Virtual Water-Science Laboratory</h1>
-                            </div>
+                        <div class="navbar-title">
+                            <h1>Virtual Water-Science Laboratory</h1>
                         </div>
-                        <ul class="nav navbar-nav navbar-links">
-                        </ul>
                     </div>
-                    <div class="navbar-login-options">
+                    <div class="navbar-options">
+                        <div class="navbar-extras">
+                            <a href="http://www.switch-on-vwsl.eu/about"><i class="fa fa-question-circle fa-so-font" aria-hidden="true"></i></a>
+                            <a href="http://www.switch-on-vwsl.eu/about-2"><i class="fa fa-info-circle fa-so-font" aria-hidden="true"></i></a>
+                            <a href="http://www.switch-on-vwsl.eu/"><i class="fa fa-home fa-so-font" aria-hidden="true"></i></a>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="navbar navbar-static-top switchon-navbar-secondary">
+            <div class="container-fluid container-secondbar">
+                    <div>
+                        <div class="navbar-menu">
+                            <ul class="nav navbar-nav navbar-links">
+                                <button type="button" class="btn btn-primary btn-sm pull-center switchon-navbar-button" id="createbutton"
+                                    onclick="window.location.assign('/createprotocol')">
+                                    <i class="fa li-navbar-button"></i>Create
+                                </button>
+                                <button type="button" class="btn btn-primary btn-sm pull-center switchon-navbar-button" id="participatebutton"
+                                    onclick="window.location.assign('/participate')">
+                                    <i class="fa li-navbar-button"></i>Participate
+                                </button>
+                                <button type="button" class="btn btn-primary btn-sm pull-center switchon-navbar-button" id="reviewbutton"
+                                    onclick="window.location.assign('/review')">
+                                    <i class="fa li-navbar-button"></i>Review
+                                </button>
+                            </ul>
+                        </div>
+                    </div>
             </div>
         </div>
         <!-- END TOOLBAR -->
