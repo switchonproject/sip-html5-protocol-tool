@@ -9,24 +9,33 @@ function writeLabelLine(tablebody, label, text){
           '<td class="col-md-10 infotext">' + text + '</td></tr>')
 }
 
-function urlify(text) {
-    var urlRegex = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
-    return text.replace(urlRegex, function(url) {
-        if (url.includes("http"))    return '<a href=' + url + ' target="_blank">' + url + '</a>';
-        else                         return '<a href=http://' + url + ' target="_blank">' + url + '</a>';
-    })
-}
-
 function writeLinksLine(tablebody, label, text){
     /*
-    write a line of text with a label to a table.
+    write a line of links with a label to a table.
     */
 
-    var html = urlify(text);
+    text = text.split(" ");
+    var urlRegex = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+    var total_str=''
 
+    for(var i =0; i < text.length; i++){
+        url=text[i];
+
+        // Is a url
+        if (url.match(urlRegex)) {
+            if (url.includes("http"))    total_str += '<a href=' + url + ' target="_blank">' + url + '</a>';
+            else                         total_str += '<a href=http://' + url + ' target="_blank">' + url + '</a>';
+        }
+        // Is just text
+        else {
+            total_str += url;
+        }
+        total_str+=" "
+    }
     $(tablebody).append(
-          '<tr><td class="col-md-2 infotext"><strong>' + label + '</strong></td>' +
-          '<td class="col-md-10 infotext">' + html + '</td></tr>')
+      '<tr><td class="col-md-2 infotext"><strong>' + label + '</strong></td>' +
+      '<td class="col-md-10 infotext">' + total_str + '</td></tr>')
+
 }
 
 function writeLabelTwoLines(tablebody, label, text){
