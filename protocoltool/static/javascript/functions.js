@@ -9,6 +9,26 @@ function writeLabelLine(tablebody, label, text){
           '<td class="col-md-10 infotext">' + text + '</td></tr>')
 }
 
+function urlify(text) {
+    var urlRegex = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+    return text.replace(urlRegex, function(url) {
+        if (url.includes("http"))    return '<a href=' + url + ' target="_blank">' + url + '</a>';
+        else                         return '<a href=http://' + url + ' target="_blank">' + url + '</a>';
+    })
+}
+
+function writeLinksLine(tablebody, label, text){
+    /*
+    write a line of text with a label to a table.
+    */
+
+    var html = urlify(text);
+
+    $(tablebody).append(
+          '<tr><td class="col-md-2 infotext"><strong>' + label + '</strong></td>' +
+          '<td class="col-md-10 infotext">' + html + '</td></tr>')
+}
+
 function writeLabelTwoLines(tablebody, label, text){
     /*
     write a line of text with a title for the experiment info in the form
@@ -46,7 +66,9 @@ function writeStepsViewProtocol(steps, table) {
 
         writeLabelLine("#" + table + " > tbody", doneText, steps[i].task);
         writeLabelLine("#" + table + " > tbody", "Description:", steps[i].properties);
-        if (steps[i].links !== "") { writeLabelLine("#" + table + " > tbody", "Links:", steps[i].links); }
+        if (steps[i].links !== "") {
+            writeLinksLine("#" + table + " > tbody", "Links:", steps[i].links);
+        }
         writeLabelLine("#" + table + " > tbody", "Task leader:", steps[i].partnerName);
         writeLabelLine("#" + table + " > tbody", "Deadline:", steps[i].deadline);
         writeLabelLine("#" + table + " > tbody", "", "");
