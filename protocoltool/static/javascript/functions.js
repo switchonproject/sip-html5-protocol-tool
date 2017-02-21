@@ -74,7 +74,7 @@ function writeStepsViewProtocol(steps, table) {
         }
 
         writeLabelLine("#" + table + " > tbody", doneText, steps[i].task);
-        writeLabelLine("#" + table + " > tbody", "Description:", steps[i].properties);
+        writeLinksLine("#" + table + " > tbody", "Description:", steps[i].properties);
         if (steps[i].links !== "") {
             writeLinksLine("#" + table + " > tbody", "Links:", steps[i].links);
         }
