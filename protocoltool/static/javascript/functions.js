@@ -438,6 +438,7 @@ function refreshExpSteps(existingList){
     // CLEAR TABLE AND FORM
     $('#id_exp_task').val("")
     $('#id_exp_properties').val("")
+    $('#id_exp_links').val("")
 
     $("#partnerExpStep").empty();
     var arrayLength = existingPartners.length;
@@ -489,7 +490,9 @@ function refreshExpSteps(existingList){
 
             $('#id_exp_task').val(existingExpSteps[i].task);
             $('#id_exp_properties').val(existingExpSteps[i].properties);
+            $('#id_exp_links').val(existingExpSteps[i].links);
             $('#id_exp_deadline').val(existingExpSteps[i].deadline);
+
             if(existingExpSteps[i].done == 'True'){
                 $('#id_done').prop('checked', true);
             }
@@ -513,6 +516,7 @@ function refreshReporting(existingList){
 
     $('#id_reporting_task').val("")
     $('#id_reporting_properties').val("")
+    $('#id_reporting_links').val("")
 
     $("#partnerReporting").empty();
     var arrayLength = existingPartners.length;
@@ -563,7 +567,9 @@ function refreshReporting(existingList){
 
             $('#id_reporting_task').val(existingReportings[i].task);
             $('#id_reporting_properties').val(existingReportings[i].properties);
+            $('#id_reporting_links').val(existingReportings[i].links);
             $('#id_reporting_deadline').val(existingReportings[i].deadline);
+
             if(existingReportings[i].done == 'True'){
                 $('#id_done').prop('checked', true);
             }
@@ -750,6 +756,7 @@ function sendExpStepInfoToServer(update){
         datasetID: datasetID,
         task: $('#id_exp_task').val(),
         properties: $('#id_exp_properties').val(),
+        links: $('#id_exp_links').val(),
         partnerID: $("#partnerExpStep").val(),
         deadline: $("#id_exp_deadline").val(),
         done: done,
@@ -780,6 +787,7 @@ function sendReportingInfoToServer(update){
         datasetID: datasetID,
         task: $('#id_reporting_task').val(),
         properties: $('#id_reporting_properties').val(),
+        links: $('#id_reporting_links').val(),
         partnerID: $("#partnerReporting").val(),
         deadline: $('#id_reporting_deadline').val(),
         done: done,

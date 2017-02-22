@@ -410,6 +410,7 @@ $(document).ready(function(){
 
                 $('#id_exp_task').val(existingExpSteps[i].task);
                 $('#id_exp_properties').val(existingExpSteps[i].properties);
+                $('#id_exp_links').val(existingExpSteps[i].links);
                 $('#id_exp_deadline').val(existingExpSteps[i].deadline);
                 if(existingExpSteps[i].done == 'True'){
                     $('#id_exp_done').prop('checked', true);
@@ -507,6 +508,7 @@ $(document).ready(function(){
 
                 $('#id_reporting_task').val(existingReportings[i].task);
                 $('#id_reporting_properties').val(existingReportings[i].properties);
+                $('#id_reporting_links').val(existingReportings[i].links);
                 $('#id_reporting_deadline').val(existingReportings[i].deadline);
                 if(existingReportings[i].done == 'True'){
                     $('#id_reporting_done').prop('checked', true);
@@ -526,7 +528,6 @@ $(document).ready(function(){
     }); // end on reportingTable clicked
 
     $('#addReportingID').on('click', function(){
-
         // check if all values are valid
         validTask = checkValidField($('#id_reporting_task'));
         validProp = checkValidField($('#id_reporting_properties'));

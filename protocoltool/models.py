@@ -67,7 +67,7 @@ class ExpStep(models.Model):
     task = models.TextField(blank=True)
     taskNr = models.IntegerField(default=1)
     properties = models.TextField(blank=True)
-    links = models.TextField(blank=True, editable=False)
+    links = models.TextField(blank=True)
     partner = models.ForeignKey(Partner)
     deadline = models.DateField(blank=True, default=datetime.date.today)
     done = models.BooleanField(default=False)
@@ -80,7 +80,7 @@ class Reporting(models.Model):
     deadline = models.DateField(blank=True, default=datetime.date.today)
     done = models.BooleanField(default=False)
     properties = models.TextField(blank=True)
-    links = models.TextField(blank=True, editable=False)
+    links = models.TextField(blank=True)
     # Foreing Keys
     partner = models.ForeignKey(Partner)
     dataset = models.ForeignKey(BasicDataset)

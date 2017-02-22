@@ -160,12 +160,14 @@ class ExpStepForm(forms.ModelForm):
         fields = [
             'task',
             'properties',
+            'links',
             'deadline',
             'done',
         ]
         labels = {
             'task': 'Task',
-            'properties': 'Output',
+            'properties': 'Description',
+            'links': 'Links',
             'deadline': 'Deadline',
             'done': 'Done',
         }
@@ -178,6 +180,9 @@ class ExpStepForm(forms.ModelForm):
                 attrs={'rows':3, 'style':'resize:vertical;', 'class': 'form-control input-sm', 'placeholder':
                     'preliminary idea of expected results in e.g. maps, graphs, list of findings'}
             ),
+            'links': TextInput(
+                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus', 'placeholder': 'e.g urls associated'}
+            ),
             'deadline': DateInput(
                 attrs={'class': 'form-control input-sm', 'type': 'date', 'placeholder': 'yyyy-mm-dd'}
             ),
@@ -189,12 +194,14 @@ class ReportingForm(forms.ModelForm):
         fields = [
             'task',
             'properties',
+            'links',
             'deadline',
             'done',
         ]
         labels = {
             'task': 'Task',
-            'properties': 'Output',
+            'properties': 'Description',
+            'links': 'Links',
             'deadline': 'Deadline',
             'done': 'Done',
         }
@@ -206,6 +213,9 @@ class ReportingForm(forms.ModelForm):
             'properties': Textarea(
                 attrs={'rows':3, 'style':'resize:vertical;', 'class': 'form-control input-sm', 'placeholder':
                     'e.g. preliminary titles of scientific papers and journals to address, conferences to attend, idea of final Figures and Tables'}
+            ),
+            'links': TextInput(
+                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus', 'placeholder': 'e.g urls associated'}
             ),
             'deadline': DateInput(
                 attrs={'class': 'form-control input-sm', 'type': 'date', 'placeholder': 'yyyy-mm-dd'}
