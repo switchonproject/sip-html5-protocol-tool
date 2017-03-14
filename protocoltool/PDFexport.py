@@ -34,7 +34,7 @@ def writeTasks(story, styles, taskList):
         elem0 = [Paragraph('Task {}:'.format(task.taskNr), styles['label']), Paragraph(task.task.replace('\n','<br />\n'), styles['default'])]
         elem1 = [Paragraph('Description:', styles['label']), Paragraph(task.properties.replace('\n','<br />\n'), styles['default'])]
         elem2 = [Paragraph('Links:', styles['label']), Paragraph(task.links.replace('\n','<br />\n'), styles['default'])]
-        elem3 = [Paragraph('Task leader:', styles['label']), Paragraph(task.partner.name, styles['default'])]
+        elem3 = [Paragraph('Task leader:', styles['label']), Paragraph(unicode(task.partner.name), styles['default'])]
         elem4 = [Paragraph('Deadline:', styles['label']), Paragraph(str(task.deadline), styles['default'])]
 
         if (task.links != ""):
@@ -190,10 +190,10 @@ def createPDF(datasetID):
     story.append(Paragraph('Partners', styles['title2']))
 
     for partner in partnerInfo:
-
-        partnerName = Paragraph('{}'.format(partner.name), styles['default'])
+        p = unicode(partner.name)
+        partnerName = Paragraph(p, styles['default'])
         if partner.lead == True:
-            partnerName = Paragraph('{} (lead)'.format(partner.name), styles['default'])
+            partnerName = Paragraph('(lead)'+p, styles['default'])
 
         data = [[Paragraph('Name:', styles['label']), partnerName],
             [Paragraph('E-mail:', styles['label']), Paragraph(partner.email, styles['default'])],
