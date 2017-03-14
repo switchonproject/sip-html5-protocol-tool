@@ -246,7 +246,8 @@
                                                     Review or repeat
                                                 </td>
                                                 <td class="col-md-4">
-                                                    <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="viewprotocol" onclick=exportProtocol(this)>View</button>
+                                                    <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="view" onclick=viewProtocol(this)>View</button>
+                                                    <button type="button" class="btn btn-xs btn-default" value="{{ dataset.id }}" name="pdf" onclick=exportProtocol(this)>PDF</button>
                                                 </td>
                                             </tr>
                                             {% endif %}
