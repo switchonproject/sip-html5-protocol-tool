@@ -18,19 +18,19 @@ function writeLinksLine(tablebody, label, text){
     var urlRegex = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
     var total_str=''
 
-    for(var i =0; i < text.length; i++){
-        url=text[i];
+    for ( var i =0; i < text.length; i++ ){
+        var word=text[i]
 
         // Is a url
-        if (url.match(urlRegex)) {
-            if (url.includes("http"))    total_str += '<a href=' + url + ' target="_blank">' + url + '</a>';
-            else                         total_str += '<a href=http://' + url + ' target="_blank">' + url + '</a>';
+        if (word.match(urlRegex)) {
+            var url = word.replace(/^\s+|\s+$/g, '');
+            if (word.includes("http"))    total_str += '<a href=' + url + ' target="_blank">' + url + '</a><br>';
+            else                          total_str += '<a href=http://' + url + ' target="_blank">' + url + '</a><br>';
         }
         // Is just text
         else {
-            total_str += url;
+            total_str = total_str + " " + word;
         }
-        total_str+=" "
     }
     $(tablebody).append(
       '<tr><td class="col-md-2 infotext"><strong>' + label + '</strong></td>' +
