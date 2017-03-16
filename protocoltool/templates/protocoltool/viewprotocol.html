@@ -1,3 +1,17 @@
+
+<!--Load in all data from Django to javascript-->
+<script type='text/javascript'>
+
+    var datasetID = "{{ datasetID }}";
+    var experimentInfo = {{ experimentInfoJSON|safe }};
+    //var partners = {{ partnersJSON|safe }};
+    var reqs = {{ reqsJSON|safe }};
+    var expSteps = {{ expStepsJSON|safe }};
+    var reportings = {{ reportingsJSON|safe }};
+
+</script>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -294,16 +308,4 @@
             }
         });
     }
-</script>
-
-<!--Load in all data from Django to javascript-->
-<script type='text/javascript'>
-
-    var datasetID = "{{ datasetID }}";
-    var experimentInfo = {{ experimentInfoJSON|safe }};
-    //var partners = {{ partnersJSON|safe }};
-    var reqs = {{ reqsJSON|safe }};
-    var expSteps = {{ expStepsJSON|safe }};
-    var reportings = {{ reportingsJSON|safe }};
-
 </script>
