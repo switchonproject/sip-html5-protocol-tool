@@ -81,8 +81,11 @@ $(document).ready(function(){
         // check if all values are valid
         validShortname = checkValidField($('#id_basic_shortTitle'));
         validTitle = checkValidField($('#id_basic_title'));
+        validIdea = checkValidField($('#id_basic_experimentIdea'));
+        validHypothesis = checkValidField($('#id_basic_hypothesis'));
+        validObjective = checkValidField($('#id_basic_researchObjective'));
 
-        if(validShortname === true && validTitle === true){
+        if(validShortname === true && validTitle === true && validIdea === true && validHypothesis === true && validObjective === true){
 
             var dataToSend = {
                     shortTitle: $('#id_basic_shortTitle').val(),
@@ -124,8 +127,11 @@ $(document).ready(function(){
         // check if all values are valid
         validShortname = checkValidField($('#id_basic_shortTitle'));
         validTitle = checkValidField($('#id_basic_title'));
+        validIdea = checkValidField($('#id_basic_experimentIdea'));
+        validHypothesis = checkValidField($('#id_basic_hypothesis'));
+        validObjective = checkValidField($('#id_basic_researchObjective'));
 
-        if(validShortname === true && validTitle === true){
+        if(validShortname === true && validTitle === true && validIdea === true && validHypothesis === true && validObjective === true){
 
             var dataToSend = {
                     shortTitle: $('#id_basic_shortTitle').val(),
@@ -335,10 +341,11 @@ $(document).ready(function(){
         // check if all values are valid
         validTask = checkValidField($('#id_req_task'));
         validProp = checkValidField($('#id_req_properties'));
+        validLinks = checkValidField($('#id_req_links'));
         validPartner = checkValidField($('#partnerDataReq'));
         validDeadline = checkValidDate($('#id_req_deadline'));
 
-        if(validTask === true && validProp === true && validPartner === true && validDeadline === true){
+        if(validTask === true && validProp === true && validPartner === true && validDeadline === true && validLinks === true){
             sendReqInfoToServer(false);
         }
         else{
@@ -353,10 +360,11 @@ $(document).ready(function(){
         // check if all values are valid
         validTask = checkValidField($('#id_req_task'));
         validProp = checkValidField($('#id_req_properties'));
+        validLinks = checkValidField($('#id_req_links'));
         validPartner = checkValidField($('#partnerDataReq'));
         validDeadline = checkValidDate($('#id_req_deadline'));
 
-        if(validTask === true && validProp === true && validPartner === true && validDeadline === true){
+        if(validTask === true && validProp === true && validPartner === true && validDeadline === true && validLinks === true){
             sendReqInfoToServer(true);
         }
         else{
@@ -435,10 +443,11 @@ $(document).ready(function(){
         // check if all values are valid
         validTask = checkValidField($('#id_exp_task'));
         validProp = checkValidField($('#id_exp_properties'));
+        validLinks = checkValidField($('#id_exp_links'));
         validPartner = checkValidField($('#partnerExpStep'));
         validDeadline = checkValidDate($('#id_exp_deadline'));
 
-        if(validTask === true && validProp === true && validPartner === true && validDeadline === true){
+        if(validTask === true && validProp === true && validPartner === true && validDeadline === true && validLinks === true){
             sendExpStepInfoToServer(false);
         }
         else{
@@ -450,10 +459,11 @@ $(document).ready(function(){
         // check if all values are valid
         validTask = checkValidField($('#id_exp_task'));
         validProp = checkValidField($('#id_exp_properties'));
+        validLinks = checkValidField($('#id_exp_links'));
         validPartner = checkValidField($('#partnerExpStep'));
         validDeadline = checkValidDate($('#id_exp_deadline'));
 
-        if(validTask === true && validProp === true && validPartner === true && validDeadline === true){
+        if(validTask === true && validProp === true && validPartner === true && validDeadline === true && validLinks === true){
             sendExpStepInfoToServer(true);
         }
         else{
@@ -531,10 +541,11 @@ $(document).ready(function(){
         // check if all values are valid
         validTask = checkValidField($('#id_reporting_task'));
         validProp = checkValidField($('#id_reporting_properties'));
+        validLinks = checkValidField($('#id_reporting_links'));
         validPartner = checkValidField($('#partnerReporting'));
         validDeadline = checkValidDate($('#id_reporting_deadline'));
 
-        if(validTask === true && validProp === true && validPartner === true && validDeadline === true){
+        if(validTask === true && validProp === true && validPartner === true && validDeadline === true && validLinks === true){
             sendReportingInfoToServer(false);
         }
         else{
@@ -546,10 +557,11 @@ $(document).ready(function(){
         // check if all values are valid
         validTask = checkValidField($('#id_reporting_task'));
         validProp = checkValidField($('#id_reporting_properties'));
+        validLinks = checkValidField($('#id_reporting_links'));
         validPartner = checkValidField($('#partnerReporting'));
         validDeadline = checkValidDate($('#id_reporting_deadline'));
 
-        if(validTask === true && validProp === true && validPartner === true && validDeadline === true){
+        if(validTask === true && validProp === true && validPartner === true && validDeadline === true && validLinks === true){
             sendReportingInfoToServer(true);
         }
         else{

@@ -29,7 +29,7 @@ function writeLinksLine(tablebody, label, text){
         }
         // Is just text
         else {
-            total_str = total_str + " " + word;
+            total_str += (word + " ");
         }
     }
     $(tablebody).append(
@@ -136,7 +136,9 @@ function checkValidField(item){
     /*
     check if a field in the form has any contents (is filled in)
     */
-   if(item.val() === null || item.val() === "" ){
+   var valuestr = item.val();
+   var ishtml = /<[a-z][\s\S]*>/i.test(valuestr);
+   if (valuestr === null || valuestr === "" || ishtml) {
         item.addClass('error');
         return false;
     }
@@ -208,10 +210,14 @@ function finish() {
     /*
     user presses the finish button; check if full name and short name are filled in
     */
+    // check if all values are valid
     validShortname = checkValidField($('#id_basic_shortTitle'));
     validTitle = checkValidField($('#id_basic_title'));
+    validIdea = checkValidField($('#id_basic_experimentIdea'));
+    validHypothesis = checkValidField($('#id_basic_hypothesis'));
+    validObjective = checkValidField($('#id_basic_researchObjective'));
 
-    if (validShortname && validTitle){
+    if (validShortname === true && validTitle === true && validIdea === true && validHypothesis === true && validObjective === true){
 //        bootbox.confirm('Experiment information that is not saved will be lost. Are you sure you wish to close the form?', function(result){
 //            if(result){
 //                $('#dataset_form').submit();
