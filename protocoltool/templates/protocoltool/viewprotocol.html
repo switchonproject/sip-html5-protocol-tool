@@ -1,42 +1,38 @@
-
-<!--Load in all data from Django to javascript-->
-<script type='text/javascript'>
-
-    var datasetID = "{{ datasetID }}";
-    var experimentInfo = {{ experimentInfoJSON|safe }};
-    //var partners = {{ partnersJSON|safe }};
-    var reqs = {{ reqsJSON|safe }};
-    var expSteps = {{ expStepsJSON|safe }};
-    var reportings = {{ reportingsJSON|safe }};
-
-</script>
-
-
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <!--CSS/Bootstrap-->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+        <!--CSS/Font awesome-->
+        <script src="https://use.fontawesome.com/00ffb5e1da.js"></script>
+
+        {% load staticfiles %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/viewprotocol.css' %}" />
+
+        <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+        <script src="{% static 'javascript/bootbox.min.js' %}"></script>
+        <script src="{% static 'javascript/functions.js' %}"></script>
+
+        <!--Load in all data from Django to javascript-->
+        <script type='text/javascript'>
+
+            var datasetID = "{{ datasetID }}";
+            var experimentInfo = {{ experimentInfoJSON|safe }};
+            //var partners = {{ partnersJSON|safe }};
+            var reqs = {{ reqsJSON|safe }};
+            var expSteps = {{ expStepsJSON|safe }};
+            var reportings = {{ reportingsJSON|safe }};
+
+        </script>
+    </head>
     <body>
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-
-            <!--CSS/Bootstrap-->
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-
-            <!--CSS/Font awesome-->
-            <script src="https://use.fontawesome.com/00ffb5e1da.js"></script>
-
-            {% load staticfiles %}
-            <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
-            <link rel="stylesheet" type="text/css" href="{% static 'css/viewprotocol.css' %}" />
-
-            <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-            <script src="{% static 'javascript/bootbox.min.js' %}"></script>
-            <script src="{% static 'javascript/functions.js' %}"></script>
-        </head>
-
         <!-- TOOLBAR -->
         <div class="navbar navbar-inverse navbar-static-top switchon-navbar">
             <div class="container-fluid">
@@ -277,35 +273,34 @@
         </script>
         <!-- END OF GOOGLE ANALYTICS -->
 
+        <!-- AUX FUNCTIONS -->
+        <script>
+        function requestEdit(instance){
+            $('#datasetActionID').val("requestEdit");
+            $('#datasetID').val(instance.value);
+            $('#dataset_action_form').submit();
+        }
+
+        function deleteProtocol(instance){
+            bootbox.confirm('The protocol will be deleted. Are you sure you wish to continue?', function(result){
+                if(result){
+                    $('#datasetActionID').val("deleteProtocol");
+                    $('#datasetID').val(instance.value);
+                    $('#dataset_action_form').submit();
+                }
+            });
+        }
+
+        function publishProtocol(instance){
+
+            bootbox.confirm('The protocol will be made non-editable. Are you sure you wish to continue?', function(result){
+                if(result){
+                    $('#datasetActionID').val("publish");
+                    $('#datasetID').val(instance.value);
+                    $('#dataset_action_form').submit();
+                }
+            });
+        }
+        </script>
     </body>
-
 </html>
-
-<script>
-    function requestEdit(instance){
-        $('#datasetActionID').val("requestEdit");
-        $('#datasetID').val(instance.value);
-        $('#dataset_action_form').submit();
-    }
-
-    function deleteProtocol(instance){
-        bootbox.confirm('The protocol will be deleted. Are you sure you wish to continue?', function(result){
-            if(result){
-                $('#datasetActionID').val("deleteProtocol");
-                $('#datasetID').val(instance.value);
-                $('#dataset_action_form').submit();
-            }
-        });
-    }
-
-    function publishProtocol(instance){
-
-        bootbox.confirm('The protocol will be made non-editable. Are you sure you wish to continue?', function(result){
-            if(result){
-                $('#datasetActionID').val("publish");
-                $('#datasetID').val(instance.value);
-                $('#dataset_action_form').submit();
-            }
-        });
-    }
-</script>

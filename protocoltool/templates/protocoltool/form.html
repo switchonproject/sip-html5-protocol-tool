@@ -1,30 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!--CSS/Bootstrap-->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.7/css/bootstrap-dialog.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+        {% load staticfiles %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+
+        <!--Javascript-->
+        <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.7/js/bootstrap-dialog.min.js"></script>
+        <script src="{% static 'javascript/bootbox.min.js' %}"></script>
+        <script src="{% static 'javascript/form.js' %}"></script>
+        <script src="{% static 'javascript/functions.js' %}"></script>
+        <!--Load in all data from Django to javascript-->
+        <script type='text/javascript'>
+
+            var datasetID = "{{ datasetID }}";
+
+            var existingExperimentInfo = {{ experimentInfoJSON|safe }};
+            var existingPartners = {{ partnersJSON|safe }};
+            var existingPublications = {{ publicationsJSON|safe }};
+            var existingReqs = {{ reqsJSON|safe }};
+            var existingExpSteps = {{ expStepsJSON|safe }};
+            var existingReportings = {{ reportingsJSON|safe }};
+
+            var csrfmiddlewaretoken =  "{{ csrf_token }}";
+
+        </script>
+    </head>
      <body>
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-
-            <!--CSS/Bootstrap-->
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.7/css/bootstrap-dialog.min.css">
-		    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-
-            {% load staticfiles %}
-            <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
-
-            <!--Javascript-->
-            <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.7/js/bootstrap-dialog.min.js"></script>
-            <script src="{% static 'javascript/bootbox.min.js' %}"></script>
-            <script src="{% static 'javascript/form.js' %}"></script>
-            <script src="{% static 'javascript/functions.js' %}"></script>
-
-        </head>
-
         <!-- TOOLBAR -->
         <div class="navbar navbar-inverse navbar-static-top switchon-navbar">
             <div class="container-fluid">
@@ -591,20 +604,3 @@
         <!-- END OF GOOGLE ANALYTICS -->
     </body>
 </html>
-
-
-<!--Load in all data from Django to javascript-->
-<script type='text/javascript'>
-
-    var datasetID = "{{ datasetID }}";
-
-    var existingExperimentInfo = {{ experimentInfoJSON|safe }};
-    var existingPartners = {{ partnersJSON|safe }};
-    var existingPublications = {{ publicationsJSON|safe }};
-    var existingReqs = {{ reqsJSON|safe }};
-    var existingExpSteps = {{ expStepsJSON|safe }};
-    var existingReportings = {{ reportingsJSON|safe }};
-
-    var csrfmiddlewaretoken =  "{{ csrf_token }}";
-
-</script>
