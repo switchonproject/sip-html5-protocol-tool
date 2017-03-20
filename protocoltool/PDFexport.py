@@ -31,10 +31,10 @@ def writeTasks(story, styles, taskList):
     '''
     for task in taskList:
 
-        elem0 = [Paragraph('Task {}:'.format(task.taskNr), styles['label']), Paragraph(task.task.replace('\n','<br />\n'), styles['default'])]
-        elem1 = [Paragraph('Description:', styles['label']), Paragraph(task.properties.replace('\n','<br />\n'), styles['default'])]
-        elem2 = [Paragraph('Links:', styles['label']), Paragraph(task.links.replace('\n','<br />\n'), styles['default'])]
-        elem3 = [Paragraph('Task leader:', styles['label']), Paragraph(unicode(task.partner.name), styles['default'])]
+        elem0 = [Paragraph('Task {}:'.format(task.taskNr), styles['label']), Paragraph(task.task.replace('\n','<br />\n').encode('utf8'), styles['default'])]
+        elem1 = [Paragraph('Description:', styles['label']), Paragraph(task.properties.replace('\n','<br />\n').encode('utf8'), styles['default'])]
+        elem2 = [Paragraph('Links:', styles['label']), Paragraph(task.links.replace('\n','<br />\n').encode('utf8'), styles['default'])]
+        elem3 = [Paragraph('Task leader:', styles['label']), Paragraph(task.partner.name.encode('utf8'), styles['default'])]
         elem4 = [Paragraph('Deadline:', styles['label']), Paragraph(str(task.deadline), styles['default'])]
 
         if (task.links != ""):
@@ -175,10 +175,10 @@ def createPDF(datasetID):
 
 
     story.append(Paragraph('Experiment Information', styles['title2']))
-    data= [[Paragraph('Full experiment name:', styles['label']), Paragraph(basicInfo.title, styles['default'])],
-           [Paragraph('Experiment Idea:', styles['label']), Paragraph(basicInfo.experimentIdea.replace('\n','<br />\n'), styles['default'])],
-           [Paragraph('Hypothesis:', styles['label']), Paragraph(basicInfo.hypothesis.replace('\n','<br />\n'), styles['default'])],
-           [Paragraph('Research objective:', styles['label']), Paragraph(basicInfo.researchObjective.replace('\n','<br />\n'), styles['default'])]]
+    data= [[Paragraph('Full experiment name:', styles['label']), Paragraph(basicInfo.title.encode('utf8'), styles['default'])],
+           [Paragraph('Experiment Idea:', styles['label']), Paragraph(basicInfo.experimentIdea.replace('\n','<br />\n').encode('utf8'), styles['default'])],
+           [Paragraph('Hypothesis:', styles['label']), Paragraph(basicInfo.hypothesis.replace('\n','<br />\n').encode('utf8'), styles['default'])],
+           [Paragraph('Research objective:', styles['label']), Paragraph(basicInfo.researchObjective.replace('\n','<br />\n').encode('utf8'), styles['default'])]]
 
     t=Table(data, hAlign='LEFT', colWidths=[4 * cm, 12 * cm])
     t.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP')]))
@@ -196,8 +196,8 @@ def createPDF(datasetID):
             partnerName = Paragraph('(lead)'+p, styles['default'])
 
         data = [[Paragraph('Name:', styles['label']), partnerName],
-            [Paragraph('E-mail:', styles['label']), Paragraph(partner.email, styles['default'])],
-           [Paragraph('Organisation:', styles['label']), Paragraph(partner.organisation, styles['default'])]]
+            [Paragraph('E-mail:', styles['label']), Paragraph(partner.email.encode('utf8'), styles['default'])],
+           [Paragraph('Organisation:', styles['label']), Paragraph(partner.organisation.encode('utf8'), styles['default'])]]
 
         t=Table(data, hAlign='LEFT', colWidths=[4 * cm, 12 * cm])
         t.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP')]))
@@ -222,11 +222,10 @@ def createPDF(datasetID):
 
     for publication in publicationInfo:
 
-        publicationName = Paragraph('{}'.format(publication.name), styles['default'])
-        publicationType = Paragraph('{}'.format(publication.type), styles['default'])
+        publicationName = Paragraph('{}'.format(publication.name.encode('utf8')), styles['default'])
 
         data = [[Paragraph('Paper Title:', styles['label']), publicationName],
-           [Paragraph('DOI:', styles['label']), Paragraph(publication.type, styles['default'])]]
+           [Paragraph('DOI:', styles['label']), Paragraph(publication.type.encode('utf8'), styles['default'])]]
 
         t=Table(data, hAlign='LEFT', colWidths=[4 * cm, 12 * cm])
         t.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP')]))
