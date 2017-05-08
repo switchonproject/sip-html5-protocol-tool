@@ -9,7 +9,7 @@ function writeLabelLine(tablebody, label, text){
           '<td class="col-md-10 infotext">' + text + '</td></tr>')
 }
 
-function writeLinksLine(tablebody, label, text){
+function writeLinksLine(tablebody, label, text, w1='2', w2='10'){
     /*
     write a line of links with a label to a table.
     */
@@ -33,8 +33,8 @@ function writeLinksLine(tablebody, label, text){
         }
     }
     $(tablebody).append(
-      '<tr><td class="col-md-2 infotext"><strong>' + label + '</strong></td>' +
-      '<td class="col-md-10 infotext">' + total_str + '</td></tr>')
+      '<tr><td class="col-md-'+w1+' infotext"><strong>' + label + '</strong></td>' +
+      '<td class="col-md-'+w2+' infotext">' + total_str + '</td></tr>')
 
 }
 
@@ -61,7 +61,7 @@ function removePublicationErrorClasses() {
 function writePublicationsViewProtocol(publications, table) {
     var nrPublications = publications.length;
     for(i = 0; i < nrPublications; i++){
-        writeLinksLine("#" + table + " > tbody", publications[i].name, publications[i].type);
+        writeLinksLine("#" + table + " > tbody", publications[i].name, publications[i].type, w1='10', w2='2');
     }
 }
 
