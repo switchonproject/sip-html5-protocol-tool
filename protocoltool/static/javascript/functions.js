@@ -58,6 +58,13 @@ function removePublicationErrorClasses() {
     $('#id_publication_type').removeClass('error');
 }
 
+function writePublicationsViewProtocol(publications, table) {
+    var nrPublications = publications.length;
+    for(i = 0; i < nrPublications; i++){
+        writeLinksLine("#" + table + " > tbody", publications[i].name, publications[i].type);
+    }
+}
+
 function writeStepsViewProtocol(steps, table) {
 
     var nrSteps = steps.length;
