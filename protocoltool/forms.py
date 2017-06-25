@@ -89,8 +89,8 @@ class PublicationForm(forms.ModelForm):
             'type': 'DOI',
         }
         widgets = {
-            'name': TextInput(
-                attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus', 'placeholder': 'the title of the published paper'}
+            'name': Textarea(
+                attrs={'rows':3, 'style':'resize:vertical;', 'class': 'form-control input-sm', 'autofocus': 'autofocus', 'placeholder': 'Please use the following format for publication references: Authors list (Date): Title of publication, Journal, Volume, Pages'}
             ),
             'type': TextInput(
                 attrs={'class': 'form-control input-sm', 'autofocus': 'autofocus', 'placeholder': 'the DOI or link to published paper'}
